@@ -50,15 +50,14 @@ public class RaceDayApiClient
             "api/auth/login",
             request);
 
-        // A 401 response means the credentials were not accepted.
+        // If a 401 response is recieved, it means that the credentials were not accepted.
         // Return null so the MVC controller can display a friendly message.
         if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
         {
             return null;
         }
 
-        // Surface unexpected API errors rather than treating them
-        // as ordinary invalid-credential responses.
+        // Surface unexpected API errors rather than treating them as ordinary invalid-credential responses.
         response.EnsureSuccessStatusCode();
 
         // The API uses a session cookie to recognise authenticated users.
@@ -86,7 +85,6 @@ public class RaceDayApiClient
         var cookiePair = sessionCookie.Split(';', 2)[0];
 
         // Store the API cookie in this visitor's server-side MVC session.
-        // Never put this cookie into a view or browser-side JavaScript.
         mvcSession.SetString("RaceDayApiSessionCookie", cookiePair);
 
         // Read the safe user details returned by the API.
@@ -105,6 +103,53 @@ public class RaceDayApiClient
     }
 
 
+   
+    public HttpRequestMessage CreateAuthenticatedRequest(
+        HttpMethod method,
+        string endpoint,
+        ISession mvcSession)
+    {
+        // Create a request for the specified API endpoint.
+        var request = new HttpRequestMessage(method, endpoint);
+
+        // Retrieve the API session cookie saved after a successful login.
+        var apiCookie = mvcSession.GetString("RaceDayApiSessionCookie");
+
+        if (!string.IsNullOrWhiteSpace(apiCookie))
+        {
+            // Forward the API cookie so the API can restore its session.
+            request.Headers.TryAddWithoutValidation("Cookie", apiCookie);
+        }
+
+        return request;
+    }
+
+
+
+    public async Task<HttpResponseMessage> SendAuthenticatedAsync(
+        HttpMethod method,
+        string endpoint,
+        ISession mvcSession,
+        HttpContent? content = null)
+    {
+        // Prepare the request with the current visitor's API cookie.
+        using var request = CreateAuthenticatedRequest(
+            method,
+            endpoint,
+            mvcSession);
+
+        // Attach a request body when the endpoint requires one.
+        if (content is not null)
+        {
+            request.Content = content;
+        }
+
+        // Create an HTTP client configured with the Part 2 API address.
+        using var client = CreateClient();
+
+        // Send the request and return the response for the caller to inspect.
+        return await client.SendAsync(request);
+    }
 
 
 
