@@ -127,4 +127,45 @@ public class AccountController : Controller
             return View(model);
         }
     }
-}
+
+
+
+
+    /// Signs the visitor out of the MVC application and requests that the Part 2 API end its session as well.
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        try
+        {
+            // Ask the API to end the session associated with this visitor.
+            await _apiClient.LogoutAsync(HttpContext.Session);
+        }
+        catch (HttpRequestException ex)
+        {
+            // Log connectivity failures without exposing session details.
+            _logger.LogWarning( ex,"The API could not complete the logout request.");
+        }
+        catch (InvalidOperationException ex)
+        {
+            // Log unexpected API responses while continuing local logout.
+            _logger.LogWarning(ex, "The API returned an unexpected logout response.");
+        }
+        finally
+        {
+            // Always clear local authentication details, even if the API fails.
+            HttpContext.Session.Clear();
+        }
+
+        // Return the signed-out visitor to the login page.
+        return RedirectToAction("Login", "Account");
+    }
+
+
+
+
+
+
+
+}//end of class

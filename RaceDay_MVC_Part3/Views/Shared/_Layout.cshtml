@@ -11,25 +11,92 @@
 </head>
 <body>
     <header>
+
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">RaceDay_MVC_Part3</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                @* Keep the RaceDay brand linked to the application's entry point. *@
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    RaceDay
+                </a>
+
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#raceDayNavbar"
+                        aria-controls="raceDayNavbar"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"
+                     id="raceDayNavbar">
+
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        @* Display navigation links appropriate to the user's role. *@
+                        @if (Context.Session.GetInt32("UserId") is not null)
+                        {
+                            var role = Context.Session.GetString("Role");
+
+                            if (role == "Organiser")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                       asp-controller="Organiser"
+                                       asp-action="Dashboard">
+                                        Dashboard
+                                    </a>
+                                </li>
+                            }
+                            else if (role == "Participant")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark"
+                                       asp-controller="Participant"
+                                       asp-action="Index">
+                                        My RaceDay
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        @* Show login when signed out and a POST logout form when signed in. *@
+                        @if (Context.Session.GetInt32("UserId") is not null)
+                        {
+                            <li class="nav-item d-flex align-items-center me-sm-3">
+                                <span class="navbar-text">
+                                    Hi, @(Context.Session.GetString("FirstName") ?? "Racer")
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account"
+                                      asp-action="Logout"
+                                      method="post"
+                                      class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-danger btn-sm mt-1">
+                                        Sign out
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
+                                   asp-controller="Account"
+                                   asp-action="Login">
+                                    Sign in
+                                </a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
         </nav>
+
     </header>
     <div class="container">
         <main role="main" class="pb-3">

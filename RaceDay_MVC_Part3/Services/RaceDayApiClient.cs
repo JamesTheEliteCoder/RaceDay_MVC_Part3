@@ -153,4 +153,20 @@ public class RaceDayApiClient
 
 
 
+    /// Requests that the Part 2 API end the current user's session.
+    public async Task LogoutAsync(ISession mvcSession)
+    {
+        // Send the logout request using the saved API session cookie.
+        using var response = await SendAuthenticatedAsync(
+            HttpMethod.Post,
+            "api/auth/logout",
+            mvcSession);
+
+        // A successful logout returns HTTP 204 No Content.
+        // Other unsuccessful responses should be surfaced to the caller.
+        response.EnsureSuccessStatusCode();
+    }
+
+
+
 }// end of class
