@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+
+
+
 namespace RaceDay_MVC_Part3.Services;
 
 public class RaceDayApiClient
@@ -187,5 +190,45 @@ public class RaceDayApiClient
         // Then return an empty list if the API response contains no JSON body.
         return events ?? new List<EventViewModel>();
     }
+
+
+
+    /// <summary>
+    /// Sends a new event to the Part 2 API for the signed-in organiser.
+    /// </summary>
+    public async Task<HttpResponseMessage> CreateEventAsync(
+        CreateEventViewModel eventModel,
+        ISession mvcSession)
+    {
+        // Convert the MVC form model into JSON for the API request.
+        // The API determines the organiser ID from its own session.
+        using var content = JsonContent.Create(new
+        {
+            eventModel.Name,
+            eventModel.Description,
+            eventModel.EventDate,
+            eventModel.Venue,
+            eventModel.City,
+            eventModel.Province,
+            eventModel.DistanceKm,
+            eventModel.EventType
+        });
+
+        // Submit the event using the existing authenticated request helper.
+        // This forwards the API session cookie saved during login.
+        return await SendAuthenticatedAsync(
+            HttpMethod.Post,
+            "api/events",
+            mvcSession,
+            content);
+    }
+
+
+
+
+
+
+
+
 
 }// end of class

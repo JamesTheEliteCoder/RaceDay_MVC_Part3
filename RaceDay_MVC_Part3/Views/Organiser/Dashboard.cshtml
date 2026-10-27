@@ -114,9 +114,12 @@
                     <p class="card-text">
                         Organise race categories and configure event routes.
                     </p>
-                    <button type="button" class="btn btn-outline-primary" disabled>
-                        Manage categories — coming soon
-                    </button>
+                   @* Open the event creation form for the signed-in organiser. *@
+<a asp-controller="Organiser"
+   asp-action="CreateEvent"
+   class="btn btn-primary mt-2">
+    <span aria-hidden="true">+</span> Create Event
+</a>
                 </div>
             </div>
         </div>
