@@ -1,6 +1,7 @@
-﻿
+﻿using RaceDay_MVC_Part3.Models;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
-using RaceDay_MVC_Part3.Models;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Linq;
@@ -223,6 +224,34 @@ public class RaceDayApiClient
             content);
     }
 
+
+    /// Sends an update request for an existing event to the Part 2 API.
+    /// Then the API checks that the signed-in organiser owns the event.
+    public async Task<HttpResponseMessage> UpdateEventAsync(
+        int eventId,
+        EditEventViewModel eventModel,
+        ISession mvcSession)
+    {
+        // Send only the fields accepted by the API's UpdateEventRequest.
+        using var content = JsonContent.Create(new
+        {
+            eventModel.Name,
+            eventModel.Description,
+            eventModel.EventDate,
+            eventModel.Venue,
+            eventModel.City,
+            eventModel.Province,
+            eventModel.DistanceKm,
+            eventModel.EventType
+        });
+
+        // The event ID identifies the resource, then the session cookie authenticates the request.
+        return await SendAuthenticatedAsync(
+            HttpMethod.Put,
+            $"api/events/{eventId}",
+            mvcSession,
+            content);
+    }
 
 
 

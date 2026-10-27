@@ -1,4 +1,5 @@
-﻿@model List<RaceDay_MVC_Part3.Models.EventViewModel>
+﻿
+@model List<RaceDay_MVC_Part3.Models.EventViewModel>
 
 @{
     // Set the title displayed by the shared page layout.
@@ -31,10 +32,12 @@
                 </p>
             </div>
 
-            @* Event creation will be connected to the API in a later milestone. *@
-            <button type="button" class="btn btn-primary mt-2" disabled>
-                <span aria-hidden="true">+</span> Create Event — coming soon
-            </button>
+            @* Open the form used to create a new event. *@
+            <a asp-controller="Organiser"
+               asp-action="CreateEvent"
+               class="btn btn-primary mt-2">
+                <span aria-hidden="true">+</span> Create Event
+            </a>
         </div>
 
         @if (Model is null || Model.Count == 0)
@@ -91,12 +94,13 @@
                             </div>
 
                             <div class="card-footer bg-transparent border-0 pt-0 pb-3">
-                                @* Event editing will be implemented in a later milestone. *@
-                                <button type="button"
-                                        class="btn btn-outline-primary btn-sm"
-                                        disabled>
-                                    Edit event — coming soon
-                                </button>
+                                @* Open the edit form for this specific event. *@
+                                <a asp-controller="Organiser"
+                                   asp-action="EditEvent"
+                                   asp-route-id="@raceEvent.EventId"
+                                   class="btn btn-outline-primary btn-sm">
+                                    Edit Event
+                                </a>
                             </div>
                         </article>
                     </div>
@@ -114,12 +118,11 @@
                     <p class="card-text">
                         Organise race categories and configure event routes.
                     </p>
-                   @* Open the event creation form for the signed-in organiser. *@
-<a asp-controller="Organiser"
-   asp-action="CreateEvent"
-   class="btn btn-primary mt-2">
-    <span aria-hidden="true">+</span> Create Event
-</a>
+                    <button type="button"
+                            class="btn btn-outline-primary mt-2"
+                            disabled>
+                        Manage categories — coming soon
+                    </button>
                 </div>
             </div>
         </div>
@@ -131,7 +134,9 @@
                     <p class="card-text">
                         Review enrolments and record race finishing results.
                     </p>
-                    <button type="button" class="btn btn-outline-primary" disabled>
+                    <button type="button"
+                            class="btn btn-outline-primary"
+                            disabled>
                         View race entries — coming soon
                     </button>
                 </div>
