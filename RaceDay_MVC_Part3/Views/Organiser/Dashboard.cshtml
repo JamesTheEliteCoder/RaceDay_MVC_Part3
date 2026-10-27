@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<RaceDay_MVC_Part3.Models.EventViewModel>
+
+@{
     // Set the title displayed by the shared page layout.
     ViewData["Title"] = "Organiser Dashboard";
 }
@@ -19,30 +21,99 @@
         Your organiser workspace is ready.
     </div>
 
-    <div class="row g-4">
-        <div class="col-12 col-md-6 col-xl-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h2 class="h5 card-title">My Events</h2>
-                    <p class="card-text">
-                        Create events and manage their details.
-                    </p>
-                    @* The event-management page will be implemented later. *@
-                    <button type="button" class="btn btn-outline-primary" disabled>
-                        Manage events — coming soon
-                    </button>
-                </div>
+    @* Display the events retrieved from the Part 2 API. *@
+    <section class="mb-5" aria-labelledby="myEventsHeading">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+            <div>
+                <h2 id="myEventsHeading" class="h3 fw-bold mb-1">My Events</h2>
+                <p class="text-muted mb-0">
+                    View the events associated with your organiser account.
+                </p>
             </div>
+
+            @* Event creation will be connected to the API in a later milestone. *@
+            <button type="button" class="btn btn-primary mt-2" disabled>
+                <span aria-hidden="true">+</span> Create Event — coming soon
+            </button>
         </div>
 
-        <div class="col-12 col-md-6 col-xl-4">
+        @if (Model is null || Model.Count == 0)
+        {
+            @* Explain the empty state instead of showing a blank section. *@
+            <div class="card shadow-sm">
+                <div class="card-body py-5 text-center">
+                    <h3 class="h5">No events yet</h3>
+                    <p class="text-muted mb-0">
+                        Events you create will appear here.
+                    </p>
+                </div>
+            </div>
+        }
+        else
+        {
+            @* Show each event returned by the API as a Bootstrap card. *@
+            <div class="row g-4">
+                @foreach (var raceEvent in Model)
+                {
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <article class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                    <span class="badge text-bg-primary">
+                                        @raceEvent.EventType
+                                    </span>
+
+                                    <span class="text-muted small">
+                                        @raceEvent.DistanceKm.ToString("0.##") km
+                                    </span>
+                                </div>
+
+                                <h3 class="h5 card-title fw-bold">
+                                    @raceEvent.Name
+                                </h3>
+
+                                <p class="card-text text-muted">
+                                    @raceEvent.Description
+                                </p>
+
+                                <hr />
+
+                                <p class="mb-2">
+                                    <strong>Date:</strong>
+                                    @raceEvent.EventDate.ToString("dd MMM yyyy")
+                                </p>
+
+                                <p class="mb-0">
+                                    <strong>Location:</strong><br />
+                                    @raceEvent.Venue<br />
+                                    @raceEvent.City, @raceEvent.Province
+                                </p>
+                            </div>
+
+                            <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                                @* Event editing will be implemented in a later milestone. *@
+                                <button type="button"
+                                        class="btn btn-outline-primary btn-sm"
+                                        disabled>
+                                    Edit event — coming soon
+                                </button>
+                            </div>
+                        </article>
+                    </div>
+                }
+            </div>
+        }
+    </section>
+
+    @* Keep the other dashboard areas as placeholders for future milestones. *@
+    <div class="row g-4">
+        <div class="col-12 col-md-6">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
                     <h2 class="h5 card-title">Categories and Routes</h2>
                     <p class="card-text">
                         Organise race categories and configure event routes.
                     </p>
-                    @* Category and route management will be connected to the API later. *@
                     <button type="button" class="btn btn-outline-primary" disabled>
                         Manage categories — coming soon
                     </button>
@@ -50,14 +121,13 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-xl-4">
+        <div class="col-12 col-md-6">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
                     <h2 class="h5 card-title">Participants and Results</h2>
                     <p class="card-text">
                         Review enrolments and record race finishing results.
                     </p>
-                    @* Enrolment and result management will be added in a later milestone. *@
                     <button type="button" class="btn btn-outline-primary" disabled>
                         View race entries — coming soon
                     </button>

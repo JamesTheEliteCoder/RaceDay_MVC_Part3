@@ -167,6 +167,25 @@ public class RaceDayApiClient
         response.EnsureSuccessStatusCode();
     }
 
+    //Retrieves events belonging to the currently signed-in organiser.
+    public async Task<List<EventViewModel>> GetMyEventsAsync(
+        ISession mvcSession)
+    {
+        // Reuse the authenticated request helper so the API receives
+        using var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            "api/events/mine",
+            mvcSession);
 
+      
+        response.EnsureSuccessStatusCode();
+
+        // Convert the API's JSON response into MVC event view models.
+        var events = await response.Content
+            .ReadFromJsonAsync<List<EventViewModel>>();
+
+        // Then return an empty list if the API response contains no JSON body.
+        return events ?? new List<EventViewModel>();
+    }
 
 }// end of class
