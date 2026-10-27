@@ -1,0 +1,68 @@
+﻿@{
+    // Set the title displayed by the shared page layout.
+    ViewData["Title"] = "Organiser Dashboard";
+}
+
+<div class="container py-5">
+    <div class="mb-4">
+        <span class="badge text-bg-primary mb-2">ORGANISER PORTAL</span>
+        <h1 class="display-5 fw-bold">Your RaceDay Dashboard</h1>
+        <p class="lead text-muted">
+            Manage your events, categories, participants and race results
+            from one place.
+        </p>
+    </div>
+
+    @* Welcome the organiser using the first name stored at login. *@
+    <div class="alert alert-info" role="status">
+        Welcome, @(Context.Session.GetString("FirstName") ?? "Organiser")!
+        Your organiser workspace is ready.
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">My Events</h2>
+                    <p class="card-text">
+                        Create events and manage their details.
+                    </p>
+                    @* The event-management page will be implemented later. *@
+                    <button type="button" class="btn btn-outline-primary" disabled>
+                        Manage events — coming soon
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">Categories and Routes</h2>
+                    <p class="card-text">
+                        Organise race categories and configure event routes.
+                    </p>
+                    @* Category and route management will be connected to the API later. *@
+                    <button type="button" class="btn btn-outline-primary" disabled>
+                        Manage categories — coming soon
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">Participants and Results</h2>
+                    <p class="card-text">
+                        Review enrolments and record race finishing results.
+                    </p>
+                    @* Enrolment and result management will be added in a later milestone. *@
+                    <button type="button" class="btn btn-outline-primary" disabled>
+                        View race entries — coming soon
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
