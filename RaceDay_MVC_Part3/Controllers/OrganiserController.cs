@@ -25,8 +25,11 @@ public class OrganiserController : Controller
 
         if (!string.Equals(role, "Organiser", StringComparison.Ordinal))
         {
-            // Deny access instead of displaying organiser-only content.
-            return Forbid();
+            if (!string.Equals(role, "Organiser", StringComparison.Ordinal))
+            {
+                // Deny access with HTTP 403 because we use session-based role checks.
+                return StatusCode(StatusCodes.Status403Forbidden);
+            }
         }
 
         // Display the dashboard view, which we will create next.

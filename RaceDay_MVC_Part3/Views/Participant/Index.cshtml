@@ -1,0 +1,68 @@
+﻿@{
+    // Set the page title for the shared MVC layout.
+    ViewData["Title"] = "Participant Home";
+}
+
+<div class="container py-5">
+    <div class="mb-4">
+        <span class="badge text-bg-success mb-2">PARTICIPANT PORTAL</span>
+        <h1 class="display-5 fw-bold">Your RaceDay Journey</h1>
+        <p class="lead text-muted">
+            Discover your next challenge, track your race entries,
+            and celebrate your results.
+        </p>
+    </div>
+
+    @* Personalise the page using the first name stored after login. *@
+    <div class="alert alert-success" role="status">
+        Welcome, @(Context.Session.GetString("FirstName") ?? "Participant")!
+        Ready for your next race?
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">Discover Events</h2>
+                    <p class="card-text">
+                        Explore upcoming runs, walks and cycling events.
+                    </p>
+                    @* We will connect this entry point to the events API later. *@
+                    <button type="button" class="btn btn-outline-success" disabled>
+                        Browse events — coming soon
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">My Events</h2>
+                    <p class="card-text">
+                        Review your race entries and enrolment statuses.
+                    </p>
+                    @* Participant enrolments will be retrieved from the API later. *@
+                    <button type="button" class="btn btn-outline-success" disabled>
+                        View my events — coming soon
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">My Results</h2>
+                    <p class="card-text">
+                        Look back at your finishing times and race positions.
+                    </p>
+                    @* Result history will be connected to the API later. *@
+                    <button type="button" class="btn btn-outline-success" disabled>
+                        View results — coming soon
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
