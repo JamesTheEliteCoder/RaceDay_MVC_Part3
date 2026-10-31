@@ -38,7 +38,7 @@ public class RaceDayApiClient
         client.BaseAddress = new Uri(baseUrl);
 
         return client;
-    }
+    }// end of CreateClient method
 
 
     public async Task<ApiUserResponse?> LoginAsync(
@@ -104,10 +104,10 @@ public class RaceDayApiClient
         }
 
         return user;
-    }
+    } // end of LoginAsync method
 
 
-   
+
     public HttpRequestMessage CreateAuthenticatedRequest(
         HttpMethod method,
         string endpoint,
@@ -153,7 +153,7 @@ public class RaceDayApiClient
 
         // Send the request and return the response for the caller to inspect.
         return await client.SendAsync(request);
-    }
+    }// end of SendAuthenticatedAsync method
 
 
 
@@ -169,7 +169,12 @@ public class RaceDayApiClient
         // A successful logout returns HTTP 204 No Content.
         // Other unsuccessful responses should be surfaced to the caller.
         response.EnsureSuccessStatusCode();
-    }
+    }// end of LogoutAsync method
+
+
+
+
+
 
     //Retrieves events belonging to the currently signed-in organiser.
     public async Task<List<EventViewModel>> GetMyEventsAsync(
@@ -190,13 +195,127 @@ public class RaceDayApiClient
 
         // Then return an empty list if the API response contains no JSON body.
         return events ?? new List<EventViewModel>();
-    }
+    } // end of GetMyEventsAsync method
 
 
 
-    /// <summary>
+
+
+
+    // Retrieves all routes associated with a specific event from the API.
+    public async Task<List<RouteViewModel>> GetRoutesAsync(
+        int eventId,
+        ISession mvcSession)
+    {
+        // Forward the authenticated API session cookie with the request.
+        using var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            $"api/events/{eventId}/routes",
+            mvcSession);
+
+        // Stop if the API reports an unsuccessful response.
+        response.EnsureSuccessStatusCode();
+
+        // Convert the API JSON response into a list of route view models.
+        var routes = await response.Content.ReadFromJsonAsync<List<RouteViewModel>>();
+
+        // Return an empty list if the API response contains no routes.
+        return routes ?? new List<RouteViewModel>();
+    }// end of GetRoutesAsync method
+
+
+
+
+
+    // Retrieves all categories associated with a specific event from the API.
+    public async Task<List<CategoryViewModel>> GetCategoriesAsync(
+        int eventId,
+        ISession mvcSession)
+    {
+        // Forward the authenticated API session cookie with the request.
+        using var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            $"api/events/{eventId}/categories",
+            mvcSession);
+
+        // Stop if the API reports an unsuccessful response.
+        response.EnsureSuccessStatusCode();
+
+        // Convert the API JSON response into category view models.
+        var categories = await response.Content
+            .ReadFromJsonAsync<List<CategoryViewModel>>();
+
+        // Return an empty list if the event has no categories.
+        return categories ?? new List<CategoryViewModel>();
+    } // end of GetCategoriesAsync method
+
+
+
+
+
+
+    // Sends a new route to the API for the specified event.
+    public async Task<HttpResponseMessage> CreateRouteAsync(
+        CreateRouteViewModel routeModel,
+        ISession mvcSession)
+    {
+        // Prepare the route details expected by the API.
+        var routeData = new
+        {
+            routeModel.RouteName,
+            routeModel.AreasCovered,
+            routeModel.DistanceKm,
+            routeModel.StartLocation,
+            routeModel.FinishLocation,
+            routeModel.Description,
+            routeModel.MapUrl
+        };
+
+        // Convert the route details into JSON.
+        var content = JsonContent.Create(routeData);
+
+        // Submit the route using the organiser's authenticated API session.
+        return await SendAuthenticatedAsync(
+            HttpMethod.Post,
+            $"api/events/{routeModel.EventId}/routes",
+            mvcSession,
+            content);
+    } // end of CreateRouteAsync method
+
+
+
+    // Sends a new category to the API for the specified event.
+    public async Task<HttpResponseMessage> CreateCategoryAsync(
+        CreateCategoryViewModel categoryModel,
+        ISession mvcSession)
+    {
+        // Prepare only the fields expected by the API.
+        var categoryData = new
+        {
+            categoryModel.Name,
+            categoryModel.CategoryType,
+            categoryModel.RouteId,
+            categoryModel.MinimumAge,
+            categoryModel.MaximumAge
+        };
+
+        // Convert the category details into JSON.
+        var content = JsonContent.Create(categoryData);
+
+        // Submit the category using the organiser's authenticated API session.
+        return await SendAuthenticatedAsync(
+            HttpMethod.Post,
+            $"api/events/{categoryModel.EventId}/categories",
+            mvcSession,
+            content);
+    } // end of CreateCategoryAsync method
+
+
+
+
+
+
     /// Sends a new event to the Part 2 API for the signed-in organiser.
-    /// </summary>
     public async Task<HttpResponseMessage> CreateEventAsync(
         CreateEventViewModel eventModel,
         ISession mvcSession)

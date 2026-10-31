@@ -170,7 +170,7 @@ public class OrganiserController : Controller
             return RedirectToAction("Login", "Account");
         }
 
-        // Only organisers may edit events.
+        // Only organisers may manage event routes and categories.
         var role = HttpContext.Session.GetString("Role");
 
         if (!string.Equals(role, "Organiser", StringComparison.Ordinal))
@@ -296,6 +296,198 @@ public class OrganiserController : Controller
             return View(model);
         }
     }
+
+    // Displays the routes and categories belonging to an organiser's event.
+    [HttpGet]
+    public async Task<IActionResult> ManageEvent(int id)
+    {
+        // Ensure that the visitor is logged in as an organiser.
+        if (HttpContext.Session.GetInt32("UserId") == null ||
+            HttpContext.Session.GetString("Role") != "Organiser")
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        try
+        {
+            // Retrieve the events owned by the current organiser.
+            var events = await _apiClient.GetMyEventsAsync(HttpContext.Session);
+
+            // Only allow management of an event belonging to this organiser.
+            var selectedEvent = events.FirstOrDefault(raceEvent =>
+                raceEvent.EventId == id);
+
+            if (selectedEvent == null)
+            {
+                return NotFound();
+            }
+
+            // Retrieve the routes and categories for the selected event.
+            var routes = await _apiClient.GetRoutesAsync(
+                id, HttpContext.Session);
+
+            var categories = await _apiClient.GetCategoriesAsync(
+                id, HttpContext.Session);
+
+            // Combine the information into one page model.
+            var viewModel = new EventManagementViewModel
+            {
+                EventId = selectedEvent.EventId,
+                EventName = selectedEvent.Name,
+                Routes = routes,
+                Categories = categories
+            };
+
+            return View(viewModel);
+        }
+        catch (HttpRequestException ex)
+        {
+            // Log the API connectivity problem for troubleshooting.
+            Console.WriteLine(
+                $"Unable to load event management data: {ex.Message}");
+
+            return StatusCode(
+                StatusCodes.Status502BadGateway,
+                "The RaceDay API could not be reached. Please try again later.");
+        }
+    } // End of ManageEvent method
+
+
+
+    // Displays the form used to add a route to an existing event.
+    [HttpGet]
+    public async Task<IActionResult> CreateRoute(int eventId)
+    {
+        // Require the visitor to be signed in.
+        var userId = HttpContext.Session.GetInt32("UserId");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        // Only organisers may create event routes.
+        var role = HttpContext.Session.GetString("Role");
+
+        if (!string.Equals(role, "Organiser", StringComparison.Ordinal))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        try
+        {
+            // Retrieve events belonging to the signed-in organiser.
+            var myEvents = await _apiClient.GetMyEventsAsync(HttpContext.Session);
+
+            // Confirm that the requested event belongs to this organiser.
+            var selectedEvent = myEvents.FirstOrDefault(
+                raceEvent => raceEvent.EventId == eventId);
+
+            if (selectedEvent is null)
+            {
+                return NotFound();
+            }
+
+            // Prepare the form with the selected event ID.
+            var model = new CreateRouteViewModel
+            {
+                EventId = selectedEvent.EventId
+            };
+
+            return View(model);
+        }
+        catch (HttpRequestException ex)
+        {
+            // Log API connectivity problems for troubleshooting.
+            Console.WriteLine(
+                $"Unable to load route creation form: {ex.Message}");
+
+            return StatusCode(
+                StatusCodes.Status502BadGateway,
+                "The RaceDay API could not be reached. Please try again later.");
+        }
+    } // end of GET action
+
+
+
+
+
+    // Validates and submits a new route to the Part 2 API.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateRoute(CreateRouteViewModel model)
+    {
+        // Require the visitor to be signed in.
+        var userId = HttpContext.Session.GetInt32("UserId");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        // Only organisers may create event routes.
+        var role = HttpContext.Session.GetString("Role");
+
+        if (!string.Equals(role, "Organiser", StringComparison.Ordinal))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        // Reject invalid form data before calling the API.
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        try
+        {
+            // Submit the route using the authenticated API client.
+            using var response = await _apiClient.CreateRouteAsync(
+                model,
+                HttpContext.Session);
+
+            // Return to event management after successful creation.
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction(
+                    nameof(ManageEvent),
+                    new { id = model.EventId });
+            }
+
+            // Handle authentication and permission errors.
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                return StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    "You are not authorised to add routes to this event.");
+            }
+
+            // Preserve the form and show an error if the API rejects the route.
+            ModelState.AddModelError(
+                string.Empty,
+                "The route could not be created. Please check the details and try again.");
+
+            return View(model);
+        }
+        catch (HttpRequestException)
+        {
+            // Preserve the entered details if the API cannot be reached.
+            ModelState.AddModelError(
+                string.Empty,
+                "The RaceDay API could not be reached. Please try again later.");
+
+            return View(model);
+        }
+    } // end of POST action
+
+
+
+
 
 
 
