@@ -113,3 +113,46 @@ Testing so far has included:
 - Updating events and confirming that changes persist.
 - Building the MVC solution successfully after implementation changes.
 Git and GitHub are used throughout development to track progress and maintain a history of meaningful changes. Features are committed as they are completed rather than waiting until the entire application has been developed.
+
+
+## 8. Event Category Management
+
+Category management allows organisers to configure the different race categories available within an event.
+
+The event management page displays the categories associated with the selected event, including their category type and associated route.
+
+Organisers can create two types of categories:
+
+- **Age categories:** Allow participants to be grouped according to minimum and maximum age requirements.
+- **Distance categories:** Allow participants to enter a race category based on the selected route distance, without requiring age restrictions.
+
+A dedicated category creation form was developed with fields for the category name, category type, associated route, minimum age, and maximum age.
+
+The route selection dropdown is populated using route information retrieved from the API. This ensures that organisers can associate a category with an existing route belonging to the selected event.
+
+The API remains responsible for validating category rules and ensuring that the selected route belongs to the correct event.
+
+Both Age and Distance category creation have been tested successfully. The resulting categories are displayed on the event management page together with their associated routes and relevant age information.
+
+## 9. Testing and Version Control
+
+Each major development milestone is tested before moving forward.
+
+Testing so far has included:
+
+- Successful user login and logout.
+- Role-based dashboard access.
+- Retrieving organiser-specific events from the API.
+- Creating new events and confirming that they are saved.
+- Validating required fields and event information.
+- Retrieving existing event details for editing.
+- Updating events and confirming that changes persist.
+- Retrieving event routes from the API.
+- Creating routes and confirming that they appear on the event management page.
+- Retrieving event categories from the API.
+- Creating Age categories with minimum and maximum age requirements.
+- Creating Distance categories without age restrictions.
+- Confirming that categories are associated with the correct event routes.
+- Building the MVC solution successfully after implementation changes.
+
+Git and GitHub are used throughout development to track progress and maintain a history of meaningful changes. Features are committed as they are completed rather than waiting until the entire application has been developed.
