@@ -354,6 +354,63 @@ public class OrganiserController : Controller
 
 
 
+
+    // Displays all participants enrolled in an event managed by the organiser.
+    [HttpGet]
+    public async Task<IActionResult> ViewEnrolments(int id)
+    {
+        // Ensure the user is signed in as an organiser.
+        var userId = HttpContext.Session.GetInt32("UserId");
+        var role = HttpContext.Session.GetString("Role");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        if (role != "Organiser")
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            // Retrieve the organiser's events to verify ownership.
+            var events = await _apiClient.GetMyEventsAsync(HttpContext.Session);
+
+            var selectedEvent = events.FirstOrDefault(raceEvent =>
+                raceEvent.EventId == id);
+
+            if (selectedEvent is null)
+            {
+                return NotFound();
+            }
+
+            // Retrieve the enrolments for the selected event.
+            var enrolments = await _apiClient.GetEventEnrolmentsAsync(
+                id,
+                HttpContext.Session);
+
+            var viewModel = new EventEnrolmentsViewModel
+            {
+                EventId = selectedEvent.EventId,
+                EventName = selectedEvent.Name,
+                Enrolments = enrolments
+            };
+
+            return View(viewModel);
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Error retrieving event enrolments: {ex.Message}");
+
+            return StatusCode(502,
+                "Unable to retrieve enrolment information from the API.");
+        }
+    } // End of ViewEnrolments method
+
+
+
     // Displays the form used to add a route to an existing event.
     [HttpGet]
     public async Task<IActionResult> CreateRoute(int eventId)

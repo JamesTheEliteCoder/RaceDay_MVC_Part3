@@ -312,6 +312,26 @@ public class RaceDayApiClient
 
 
 
+    // Retrieves all enrolments for an event managed by the signed-in organiser.
+    public async Task<List<EnrolmentViewModel>> GetEventEnrolmentsAsync(
+        int eventId,
+        ISession mvcSession)
+    {
+        // Send an authenticated request to the Part 2 API.
+        var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            $"api/events/{eventId}/enrolments",
+            mvcSession);
+
+        response.EnsureSuccessStatusCode();
+
+        // Convert the API response into MVC enrolment models.
+        return await response.Content.ReadFromJsonAsync<List<EnrolmentViewModel>>()
+               ?? new List<EnrolmentViewModel>();
+    } // end of GetEventEnrolmentsAsync method
+
+
+
 
 
 
