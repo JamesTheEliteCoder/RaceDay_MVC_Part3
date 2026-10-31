@@ -1,0 +1,118 @@
+﻿@model RaceDay_MVC_Part3.Models.CreateCategoryViewModel
+
+@{
+    ViewData["Title"] = "Add Category";
+}
+
+<div class="container mt-4">
+
+    <div class="mb-4">
+        <h1>Add Event Category</h1>
+        <p class="text-muted">
+            Create a participant category and associate it with an event route.
+        </p>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-action="CreateCategory" method="post">
+
+                @* Preserve the event ID when the form is submitted. *@
+                <input type="hidden" asp-for="EventId" />
+
+                @* Display validation and API errors. *@
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">
+                        Category Name
+                    </label>
+                    <input asp-for="Name" class="form-control"
+                           placeholder="e.g. Men's 5K" />
+                    <span asp-validation-for="Name"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CategoryType" class="form-label">
+                        Category Type
+                    </label>
+                    <select asp-for="CategoryType" class="form-select">
+                        <option value="">-- Select Category Type --</option>
+                        <option value="Age">Age</option>
+                        <option value="Distance">Distance</option>
+                    </select>
+                    <span asp-validation-for="CategoryType"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="RouteId" class="form-label">
+                        Associated Route
+                    </label>
+                    <select asp-for="RouteId" class="form-select">
+                        <option value="">-- Select a Route --</option>
+
+                        @foreach (var route in Model.AvailableRoutes)
+                        {
+                            <option value="@route.RouteId">
+                                @route.RouteName (@route.DistanceKm km)
+                            </option>
+                        }
+                    </select>
+                    <span asp-validation-for="RouteId"
+                          class="text-danger"></span>
+                </div>
+
+                <hr />
+
+                <h5>Age Restrictions</h5>
+                <p class="text-muted">
+                    These fields apply to Age categories only.
+                    Leave them blank if no age restriction is required.
+                </p>
+
+                <div class="mb-3">
+                    <label asp-for="MinimumAge" class="form-label">
+                        Minimum Age (optional)
+                    </label>
+                    <input asp-for="MinimumAge" class="form-control"
+                           type="number" min="0" />
+                    <span asp-validation-for="MinimumAge"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MaximumAge" class="form-label">
+                        Maximum Age (optional)
+                    </label>
+                    <input asp-for="MaximumAge" class="form-control"
+                           type="number" min="0" />
+                    <span asp-validation-for="MaximumAge"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        Add Category
+                    </button>
+
+                    <a asp-action="ManageEvent"
+                       asp-route-id="@Model.EventId"
+                       class="btn btn-outline-secondary">
+                        Cancel
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

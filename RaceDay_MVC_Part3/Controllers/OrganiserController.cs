@@ -487,9 +487,160 @@ public class OrganiserController : Controller
 
 
 
+    // Displays the form used to add a category to an existing event.
+    [HttpGet]
+    public async Task<IActionResult> CreateCategory(int eventId)
+    {
+        // Require the visitor to be signed in.
+        var userId = HttpContext.Session.GetInt32("UserId");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        // Only organisers may create event categories.
+        var role = HttpContext.Session.GetString("Role");
+
+        if (!string.Equals(role, "Organiser", StringComparison.Ordinal))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        try
+        {
+            // Retrieve events belonging to the signed-in organiser.
+            var myEvents = await _apiClient.GetMyEventsAsync(HttpContext.Session);
+
+            // Confirm that the requested event belongs to this organiser.
+            var selectedEvent = myEvents.FirstOrDefault(
+                raceEvent => raceEvent.EventId == eventId);
+
+            if (selectedEvent is null)
+            {
+                return NotFound();
+            }
+
+            // Retrieve the routes available for this event.
+            var routes = await _apiClient.GetRoutesAsync(
+                eventId, HttpContext.Session);
+
+            // Prepare the category form and its route dropdown options.
+            var model = new CreateCategoryViewModel
+            {
+                EventId = selectedEvent.EventId,
+                AvailableRoutes = routes
+            };
+
+            return View(model);
+        }
+        catch (HttpRequestException ex)
+        {
+            // Log API connectivity problems for troubleshooting.
+            Console.WriteLine(
+                $"Unable to load category creation form: {ex.Message}");
+
+            return StatusCode(
+                StatusCodes.Status502BadGateway,
+                "The RaceDay API could not be reached. Please try again later.");
+        }
+    } // end of GET action (CreateCategory Method)
 
 
 
+
+
+
+
+    // Validates and submits a new category to the Part 2 API.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreateCategory(
+        CreateCategoryViewModel model)
+    {
+        // Require the visitor to be signed in.
+        var userId = HttpContext.Session.GetInt32("UserId");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        // Only organisers may create event categories.
+        var role = HttpContext.Session.GetString("Role");
+
+        if (!string.Equals(role, "Organiser", StringComparison.Ordinal))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        // Reject invalid form data before calling the API.
+        if (!ModelState.IsValid)
+        {
+            await ReloadAvailableRoutesAsync(model);
+            return View(model);
+        }
+
+        try
+        {
+            // Submit the category using the authenticated API client.
+            using var response = await _apiClient.CreateCategoryAsync(
+                model,
+                HttpContext.Session);
+
+            // Return to event management after successful creation.
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction(
+                    nameof(ManageEvent),
+                    new { id = model.EventId });
+            }
+
+            // Handle authentication and permission errors.
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (response.StatusCode == HttpStatusCode.Forbidden)
+            {
+                return StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    "You are not authorised to add categories to this event.");
+            }
+
+            // Display a useful message if the API rejects the category.
+            ModelState.AddModelError(
+                string.Empty,
+                "The category could not be created. Please check the details and try again.");
+
+            await ReloadAvailableRoutesAsync(model);
+            return View(model);
+        }
+        catch (HttpRequestException)
+        {
+            // Preserve the entered details if the API cannot be reached.
+            ModelState.AddModelError(
+                string.Empty,
+                "The RaceDay API could not be reached. Please try again later.");
+
+            await ReloadAvailableRoutesAsync(model);
+            return View(model);
+        }
+    } // end of POST action (CreateCategory Method)
+
+
+
+
+
+    // Reloads the event's routes when the category form must be redisplayed.
+    private async Task ReloadAvailableRoutesAsync(
+        CreateCategoryViewModel model)
+    {
+        model.AvailableRoutes = await _apiClient.GetRoutesAsync(
+            model.EventId,
+            HttpContext.Session);
+    } // end of ReloadAvailableRoutesAsync helper method
 
 
 } // End of OrganiserController class
