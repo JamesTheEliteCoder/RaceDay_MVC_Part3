@@ -1,0 +1,178 @@
+﻿@model RaceDay_MVC_Part3.Models.EventResultsViewModel
+
+@{
+    ViewData["Title"] = "Manage Results";
+}
+
+
+
+
+<div class="container mt-4">
+
+    <!-- Page heading and selected event details -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="badge bg-primary mb-2">Organiser</span>
+            <h2 class="fw-bold">Manage Results</h2>
+            <p class="text-muted mb-0">
+                Record and update finishing positions and times for
+                <strong>@Model.EventName</strong>.
+            </p>
+        </div>
+
+        <a asp-controller="Organiser"
+           asp-action="ManageEvent"
+           asp-route-id="@Model.EventId"
+           class="btn btn-outline-secondary">
+            Back to Event
+        </a>
+    </div>
+
+    <!-- Display all participants enrolled in this event -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Enrolled Participants</h5>
+        </div>
+
+        <div class="card-body">
+            @if (Model.Enrolments == null || !Model.Enrolments.Any())
+            {
+                <p class="text-muted mb-0">
+                    No participants have enrolled in this event yet.
+                </p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Participant</th>
+                                <th>Email</th>
+                                <th>Category</th>
+                                <th>Enrolment Date</th>
+                                <th>Status</th>
+                                <th>Result Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var enrolment in Model.Enrolments)
+                            {
+                                var hasResult = Model.Results.Any(
+                                    result => result.EnrolmentId == enrolment.EnrolmentId);
+
+                                <tr>
+                                    <td>@enrolment.ParticipantName</td>
+                                    <td>@enrolment.ParticipantEmail</td>
+                                    <td>@enrolment.CategoryName</td>
+                                    <td>@enrolment.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                                    <td>
+                                        <span class="badge bg-success">
+                                            @enrolment.Status
+                                        </span>
+                                    </td>
+                                    <td>
+                                        @if (hasResult)
+                                        {
+                                            <span class="badge bg-success">Recorded</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Display and manage participant finishing results -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Finishing Results</h5>
+        </div>
+
+        <div class="card-body">
+            @if (Model.Enrolments == null || !Model.Enrolments.Any())
+            {
+                <p class="text-muted mb-0">
+                    Results can be recorded once participants have enrolled.
+                </p>
+            }
+            else
+            {
+                @foreach (var enrolment in Model.Enrolments)
+                {
+                    var result = Model.Results.FirstOrDefault(
+                        item => item.EnrolmentId == enrolment.EnrolmentId);
+
+                    <div class="border rounded p-3 mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h6 class="fw-bold mb-1">@enrolment.ParticipantName</h6>
+                                <small class="text-muted">@enrolment.CategoryName</small>
+                            </div>
+
+                            @if (result != null)
+                            {
+                                <span class="badge bg-success">Result Recorded</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Awaiting Result</span>
+                            }
+                        </div>
+
+                        <form asp-controller="Organiser"
+                              asp-action="@(result == null ? "RecordResult" : "UpdateResult")"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden" name="eventId" value="@Model.EventId" />
+                            <input type="hidden" name="enrolmentId" value="@enrolment.EnrolmentId" />
+
+                            <div class="row align-items-end">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Finishing Position</label>
+                                    <input type="number"
+                                           name="finishingPosition"
+                                           class="form-control"
+                                           min="1"
+                                           required
+                                           value="@(result?.FinishingPosition)" />
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Finish Time</label>
+                                    <input type="time"
+                                           name="finishTime"
+                                           class="form-control"
+                                           step="1"
+                                           required
+                                           value="@(result?.FinishTime.ToString("HH:mm:ss"))" />
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        @(result == null ? "Record Result" : "Update Result")
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <a asp-controller="Organiser"
+       asp-action="Dashboard"
+       class="btn btn-outline-secondary mb-4">
+        Back to Dashboard
+    </a>
+</div>

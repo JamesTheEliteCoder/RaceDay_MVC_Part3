@@ -25,9 +25,82 @@ public class AccountController : Controller
         _logger = logger;
     }
 
+
+
+    /// Displays the new account registration form.
+    [HttpGet]
+    public IActionResult Register()
+    {
+        // Supply an empty model for the registration form.
+        return View(new RegisterViewModel());
+    } //end of Register method
+
+
+
+
+
     /// <summary>
-    /// Displays the login form.
+    /// Submits new account details to the Part 2 API.
     /// </summary>
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        // Reject invalid form input before contacting the API.
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        try
+        {
+            // Send the registration details to the Part 2 API.
+            var success = await _apiClient.RegisterAsync(model);
+
+            if (success)
+            {
+                // Confirm successful registration and direct the user to login.
+                TempData["SuccessMessage"] =
+                    "Your account has been created successfully. You can now sign in.";
+
+                return RedirectToAction(nameof(Login));
+            }
+
+            // The API rejected the registration request.
+            ModelState.AddModelError(
+                string.Empty,
+                "Registration could not be completed. The email address may already be registered.");
+
+            return View(model);
+        }
+        catch (HttpRequestException ex)
+        {
+            // Log the technical issue without exposing sensitive registration details.
+            _logger.LogError(ex, "The RaceDay API could not process a registration request.");
+
+            ModelState.AddModelError(
+                string.Empty,
+                "We couldn't connect to the service. Please try again shortly.");
+
+            return View(model);
+        }
+        catch (InvalidOperationException ex)
+        {
+            // Handle unexpected API responses safely.
+            _logger.LogError(ex, "The RaceDay API returned an unexpected registration response.");
+
+            ModelState.AddModelError(
+                string.Empty,
+                "We couldn't complete your registration. Please try again shortly.");
+
+            return View(model);
+        }
+    } //end of Register method
+
+
+
+
+    /// Displays the login form.
     [HttpGet]
     public IActionResult Login()
     {

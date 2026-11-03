@@ -14,9 +14,14 @@
                     <p class="text-muted text-center mb-4">
                         Sign in to continue your RaceDay experience.
                     </p>
-
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
                     @* Show general errors, such as invalid credentials or API connection issues. *@
-                    <div asp-validation-summary="ModelOnly"
+                   <div asp-validation-summary="ModelOnly"
                          class="text-danger mb-3"
                          role="alert"></div>
 
@@ -51,6 +56,15 @@
                             Sign in
                         </button>
                     </form>
+                    <!-- Give new visitors a way to create an account -->
+                    <div class="text-center mt-4">
+                        <span class="text-muted">New to RaceDay?</span>
+                        <a asp-controller="Account"
+                           asp-action="Register"
+                           class="fw-semibold text-decoration-none">
+                            Create an account
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

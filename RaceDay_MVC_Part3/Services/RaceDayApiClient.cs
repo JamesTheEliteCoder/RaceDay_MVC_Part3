@@ -108,6 +108,37 @@ public class RaceDayApiClient
 
 
 
+    // Sends a new user's registration details to the Part 2 API.
+    public async Task<bool> RegisterAsync(RegisterViewModel model)
+    {
+        // Create an API client using the configured base URL.
+        var client = _httpClientFactory.CreateClient();
+
+        client.BaseAddress = new Uri(
+            _configuration["ApiSettings:BaseUrl"]!);
+
+        // Build the registration request using the API's expected fields.
+        var registrationData = new
+        {
+            model.FirstName,
+            model.LastName,
+            model.Email,
+            model.Password,
+            model.Role,
+            model.PhoneNumber,
+            model.DateOfBirth
+        };
+
+        // Submit the registration details to the API.
+        var response = await client.PostAsJsonAsync(
+            "api/auth/register", registrationData);
+
+        // Return whether the API successfully created the account.
+        return response.IsSuccessStatusCode;
+    } // end of RegisterAsync method
+
+
+
     public HttpRequestMessage CreateAuthenticatedRequest(
         HttpMethod method,
         string endpoint,
@@ -332,6 +363,84 @@ public class RaceDayApiClient
 
 
 
+
+
+
+    // Retrieves all recorded results for an event managed by the signed-in organiser.
+    public async Task<List<ResultViewModel>> GetEventResultsAsync(
+        int eventId,
+        ISession mvcSession)
+    {
+        // Send an authenticated request to the Part 2 API.
+        var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            $"api/events/{eventId}/results",
+            mvcSession);
+
+        response.EnsureSuccessStatusCode();
+
+        // Convert the API response into MVC result models.
+        return await response.Content.ReadFromJsonAsync<List<ResultViewModel>>()
+               ?? new List<ResultViewModel>();
+    } //end of GetEventResultsAsync method
+
+
+
+
+
+    // Records a finishing position and time for an event enrolment.
+    public async Task<bool> RecordResultAsync(
+        int enrolmentId,
+        int finishingPosition,
+        TimeOnly finishTime,
+        ISession mvcSession)
+    {
+        // Prepare the result information expected by the API.
+        var resultData = new
+        {
+            FinishingPosition = finishingPosition,
+            FinishTime = finishTime
+        };
+
+        // Send the result to the API using the organiser's session.
+        var response = await SendAuthenticatedAsync(
+            HttpMethod.Post,
+            $"api/enrolment/{enrolmentId}/result",
+            mvcSession,
+            JsonContent.Create(resultData));
+
+        return response.IsSuccessStatusCode;
+    } // end of RecordResultAsync method
+
+
+
+
+
+
+
+    // Updates an existing result for an event enrolment.
+    public async Task<bool> UpdateResultAsync(
+        int enrolmentId,
+        int finishingPosition,
+        TimeOnly finishTime,
+        ISession mvcSession)
+    {
+        // Prepare the updated result information expected by the API.
+        var resultData = new
+        {
+            FinishingPosition = finishingPosition,
+            FinishTime = finishTime
+        };
+
+        // Send an authenticated PUT request to update the existing result.
+        var response = await SendAuthenticatedAsync(
+            HttpMethod.Put,
+            $"api/enrolment/{enrolmentId}/result",
+            mvcSession,
+            JsonContent.Create(resultData));
+
+        return response.IsSuccessStatusCode;
+    } // end of UpdateResultAsync method
 
 
 

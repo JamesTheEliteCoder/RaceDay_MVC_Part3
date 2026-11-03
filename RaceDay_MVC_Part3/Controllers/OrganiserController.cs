@@ -411,6 +411,185 @@ public class OrganiserController : Controller
 
 
 
+
+
+
+
+    // Displays participant enrolments and recorded results for an organiser's event.
+    public async Task<IActionResult> ManageResults(int id)
+    {
+        // Confirm that a user is signed in as an organiser.
+        var userId = HttpContext.Session.GetInt32("UserId");
+        var role = HttpContext.Session.GetString("Role");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Auth");
+        }
+
+        if (role != "Organiser")
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            // Retrieve the organiser's events from the API.
+            var events = await _apiClient.GetMyEventsAsync(HttpContext.Session);
+
+            // Find the selected event and confirm that it belongs to this organiser.
+            var selectedEvent = events.FirstOrDefault(raceEvent => raceEvent.EventId == id);
+
+            if (selectedEvent is null)
+            {
+                return NotFound();
+            }
+
+            // Retrieve the event's enrolments and recorded results.
+            var enrolments = await _apiClient.GetEventEnrolmentsAsync(
+                id, HttpContext.Session);
+
+            var results = await _apiClient.GetEventResultsAsync(
+                id, HttpContext.Session);
+
+            // Combine the API data into one view model.
+            var viewModel = new EventResultsViewModel
+            {
+                EventId = selectedEvent.EventId,
+                EventName = selectedEvent.Name,
+                Enrolments = enrolments,
+                Results = results
+            };
+
+            return View(viewModel);
+        }
+        catch (HttpRequestException ex)
+        {
+            // Log API communication errors for troubleshooting.
+            Console.WriteLine($"Error loading event results: {ex.Message}");
+
+            return StatusCode(502, "Unable to retrieve event results from the API.");
+        }
+    } // End of ManageResults method
+
+
+
+    // Records a finishing position and time for an enrolled participant.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RecordResult(
+        int eventId,
+        int enrolmentId,
+        int finishingPosition,
+        TimeOnly finishTime)
+    {
+        // Confirm that the signed-in user is an organiser.
+        var userId = HttpContext.Session.GetInt32("UserId");
+        var role = HttpContext.Session.GetString("Role");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Auth");
+        }
+
+        if (role != "Organiser")
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            // Submit the new result through the Part 2 API.
+            var success = await _apiClient.RecordResultAsync(
+                enrolmentId,
+                finishingPosition,
+                finishTime,
+                HttpContext.Session);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = "Participant result recorded successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Unable to record the result. A result may already exist.";
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Error recording result: {ex.Message}");
+
+            TempData["ErrorMessage"] = "An error occurred while communicating with the API.";
+        }
+
+        // Return to the results page after processing the submission.
+        return RedirectToAction(nameof(ManageResults), new { id = eventId });
+    } // End of RecordResult method
+
+
+
+
+
+    // Updates an existing result for an enrolled participant.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateResult(
+        int eventId,
+        int enrolmentId,
+        int finishingPosition,
+        TimeOnly finishTime)
+    {
+        // Confirm that the signed-in user is an organiser.
+        var userId = HttpContext.Session.GetInt32("UserId");
+        var role = HttpContext.Session.GetString("Role");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Auth");
+        }
+
+        if (role != "Organiser")
+        {
+            return Forbid();
+        }
+
+        try
+        {
+            // Submit the updated result through the Part 2 API.
+            var success = await _apiClient.UpdateResultAsync(
+                enrolmentId,
+                finishingPosition,
+                finishTime,
+                HttpContext.Session);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = "Participant result updated successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Unable to update the participant's result.";
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Error updating result: {ex.Message}");
+
+            TempData["ErrorMessage"] = "An error occurred while communicating with the API.";
+        }
+
+        // Return to the results page after processing the update.
+        return RedirectToAction(nameof(ManageResults), new { id = eventId });
+    } // End of UpdateResult method
+
+
+
+
+
+
+
+
+
     // Displays the form used to add a route to an existing event.
     [HttpGet]
     public async Task<IActionResult> CreateRoute(int eventId)
