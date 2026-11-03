@@ -154,5 +154,39 @@ Testing so far has included:
 - Creating Distance categories without age restrictions.
 - Confirming that categories are associated with the correct event routes.
 - Building the MVC solution successfully after implementation changes.
+- Retrieving event enrolments through the API.
+- Confirming that participant and category details are included in the API response.
+- Displaying participant enrolments in the organiser interface.
+- Confirming that enrolment dates, categories, and statuses appear correctly.
+  
+Git and GitHub are used throughout development to track progress and maintain a history of meaningful changes. I commit features as they are completed rather than waiting until the entire application is developed.
 
-Git and GitHub are used throughout development to track progress and maintain a history of meaningful changes. Features are committed as they are completed rather than waiting until the entire application has been developed.
+
+
+## 10. Organiser Enrolment Management
+
+Organisers can now view the participants who have enrolled in their events through a dedicated enrolment management page.
+
+The functionality builds on the existing enrolment endpoint in the Part 2 API. The API response was enhanced to include participant and category information alongside the original enrolment details.
+
+The updated API response includes:
+
+- Enrolment ID.
+- Participant ID and full name.
+- Participant email address.
+- Event ID.
+- Selected category ID and category name.
+- Enrolment date.
+- Enrolment status.
+
+The API retrieves the relevant enrolment, participant, and category information using Entity Framework Core. It also verifies that the signed-in organiser owns the event before returning its enrolments.
+
+On the MVC side, a dedicated enrolment view model and API client method were introduced to retrieve the information.
+
+Organisers can access the enrolment page directly from the event management page.
+
+The page displays participants in a responsive Bootstrap table, showing their names, email addresses, selected categories, enrolment dates, and current statuses.
+
+A participant count is also displayed, together with an informative message when an event has no enrolments.
+
+The complete enrolment management process has been tested successfully. Existing participant enrolment information was retrieved from the API and displayed correctly in the MVC application.
