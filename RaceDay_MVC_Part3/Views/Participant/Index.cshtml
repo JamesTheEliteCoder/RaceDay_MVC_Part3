@@ -73,12 +73,12 @@
                         Look back at your finishing times and race positions.
                     </p>
 
-                    @* Result history will be connected to the API later. *@
-                    <button type="button"
-                            class="btn btn-outline-success"
-                            disabled>
-                        View results — coming soon
-                    </button>
+                    @* Navigate to the participant's personal race results. *@
+                    <a asp-controller="Participant"
+                       asp-action="MyResults"
+                       class="btn btn-outline-success">
+                        View My Results
+                    </a>
                 </div>
             </div>
         </div>

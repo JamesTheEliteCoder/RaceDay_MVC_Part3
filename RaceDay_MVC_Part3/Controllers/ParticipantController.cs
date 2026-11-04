@@ -292,6 +292,46 @@ public class ParticipantController : Controller
 
 
 
+    // Displays all recorded race results belonging to the signed-in participant.
+    [HttpGet]
+    public async Task<IActionResult> MyResults()
+    {
+        // Confirm that the participant is logged in.
+        var userId = HttpContext.Session.GetInt32("UserId");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        // Only participants may access their personal race results.
+        var role = HttpContext.Session.GetString("Role");
+
+        if (!string.Equals(role, "Participant", StringComparison.Ordinal))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        try
+        {
+            // Retrieve the participant's results through the Part 2 API.
+            var results = await _apiClient.GetMyResultsAsync(
+                HttpContext.Session);
+
+            return View(results);
+        }
+        catch (HttpRequestException ex)
+        {
+            // Log API communication errors for troubleshooting.
+            Console.WriteLine($"Error retrieving participant results: {ex.Message}");
+
+            return StatusCode(
+                StatusCodes.Status502BadGateway,
+                "Unable to retrieve your race results at this time.");
+        }
+    } // end of MyResults method
+
+
 
 
 

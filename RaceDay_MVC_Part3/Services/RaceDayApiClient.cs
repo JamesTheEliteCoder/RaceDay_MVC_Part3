@@ -257,6 +257,32 @@ public class RaceDayApiClient
 
 
 
+
+    // Retrieves all recorded race results belonging to the signed-in participant.
+    public async Task<List<ParticipantResultViewModel>> GetMyResultsAsync(
+        ISession mvcSession)
+    {
+        // Send an authenticated GET request to the Part 2 API.
+        using var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            "api/results/mine",
+            mvcSession);
+
+        // Check that the API request was successful.
+        response.EnsureSuccessStatusCode();
+
+        // Convert the API JSON response into MVC ViewModels.
+        var results = await response.Content
+            .ReadFromJsonAsync<List<ParticipantResultViewModel>>();
+
+        // Return the results, or an empty list if none are available.
+        return results ?? new List<ParticipantResultViewModel>();
+    }
+
+
+
+
+
     // Retrieves all events available for participants to browse.
     public async Task<List<EventViewModel>> GetAvailableEventsAsync(
         ISession mvcSession)
