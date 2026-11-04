@@ -27,10 +27,12 @@
                     <p class="card-text">
                         Explore upcoming runs, walks and cycling events.
                     </p>
-                    @* We will connect this entry point to the events API later. *@
-                    <button type="button" class="btn btn-outline-success" disabled>
-                        Browse events — coming soon
-                    </button>
+                    @* Take participants to the event discovery page. *@
+                    <a asp-controller="Participant"
+                       asp-action="BrowseEvents"
+                       class="btn btn-success">
+                        <i class="bi bi-search me-1"></i> Browse events
+                    </a>
                 </div>
             </div>
         </div>

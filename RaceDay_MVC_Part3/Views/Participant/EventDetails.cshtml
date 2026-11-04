@@ -1,0 +1,105 @@
+﻿@model RaceDay_MVC_Part3.Models.EventDetailsViewModel
+
+@{
+    // Set the browser page title using the selected event's name.
+    ViewData["Title"] = Model.Event.Name;
+}
+
+<div class="container py-5">
+
+    @* Event heading and main information. *@
+    <div class="mb-4">
+        <span class="badge text-bg-success mb-2">
+            @Model.Event.EventType
+        </span>
+
+        <h1 class="display-5 fw-bold">@Model.Event.Name</h1>
+
+        <p class="lead text-muted">
+            @Model.Event.Description
+        </p>
+    </div>
+
+    @* Present the event's key details in a card. *@
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="h5 mb-3">Event Information</h2>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <strong>Date:</strong>
+                    @Model.Event.EventDate.ToString("dd MMMM yyyy")
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Distance:</strong>
+                    @Model.Event.DistanceKm km
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Venue:</strong>
+                    @Model.Event.Venue
+                </div>
+
+                <div class="col-md-6">
+                    <strong>Location:</strong>
+                    @Model.Event.City, @Model.Event.Province
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Display the categories participants can enrol in. *@
+    <div class="mb-4">
+        <h2 class="h4 fw-bold mb-3">Available Categories</h2>
+
+        @if (Model.Categories == null || !Model.Categories.Any())
+        {
+            <div class="alert alert-info">
+                No categories are currently available for this event.
+            </div>
+        }
+        else
+        {
+            <div class="row g-3">
+                @foreach (var category in Model.Categories)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <span class="badge text-bg-secondary mb-2">
+                                    @category.CategoryType
+                                </span>
+
+                                <h3 class="h5">@category.Name</h3>
+
+                                @if (category.CategoryType == "Age")
+                                {
+                                    <p class="text-muted mb-0">
+                                        Age range:
+                                        @(category.MinimumAge?.ToString() ?? "No minimum")
+                                        –
+                                        @(category.MaximumAge?.ToString() ?? "No maximum")
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">
+                                        @Model.Event.DistanceKm km event
+                                    </p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <a asp-controller="Participant"
+       asp-action="BrowseEvents"
+       class="btn btn-outline-secondary">
+        Back to Events
+    </a>
+
+</div>

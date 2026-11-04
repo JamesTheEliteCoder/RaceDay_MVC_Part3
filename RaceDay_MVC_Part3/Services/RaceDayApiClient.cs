@@ -233,6 +233,26 @@ public class RaceDayApiClient
 
 
 
+    // Retrieves all events available for participants to browse.
+    public async Task<List<EventViewModel>> GetAvailableEventsAsync(
+        ISession mvcSession)
+    {
+        // Send an authenticated request to retrieve all events.
+        var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            "api/events",
+            mvcSession);
+
+        // Throw an exception if the API request was unsuccessful.
+        response.EnsureSuccessStatusCode();
+
+        // Convert the API response into MVC event view models.
+        return await response.Content.ReadFromJsonAsync<List<EventViewModel>>()
+               ?? new List<EventViewModel>();
+    } // end of GetAvailableEventsAsync method
+
+
+
     // Retrieves all routes associated with a specific event from the API.
     public async Task<List<RouteViewModel>> GetRoutesAsync(
         int eventId,
@@ -499,7 +519,37 @@ public class RaceDayApiClient
             $"api/events/{eventId}",
             mvcSession,
             content);
-    }
+    } // end of UpdateEventAsync method
+
+
+
+
+
+
+    // Retrieves the details of one event from the Part 2 API.
+    public async Task<EventViewModel?> GetEventByIdAsync(
+        int eventId,
+        ISession mvcSession)
+    {
+        // Forward the participant's API session cookie with the request.
+        var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            $"api/events/{eventId}",
+            mvcSession);
+
+        // Return null if the requested event does not exist.
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync<EventViewModel>();
+    }// end of GetEventByIdAsync method
+
+
+
 
 
 
