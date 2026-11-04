@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 
@@ -229,6 +228,31 @@ public class RaceDayApiClient
     } // end of GetMyEventsAsync method
 
 
+
+
+
+
+
+    // Retrieves all enrolments belonging to the currently signed-in participant.
+    public async Task<List<ParticipantEnrolmentViewModel>> GetMyEnrolmentsAsync(
+        ISession mvcSession)
+    {
+        // Send an authenticated request to the participant enrolments endpoint.
+        using var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            "api/enrolments/mine",
+            mvcSession);
+
+        // Stop if the API reports an unsuccessful response.
+        response.EnsureSuccessStatusCode();
+
+        // Convert the API JSON response into participant enrolment view models.
+        var enrolments = await response.Content
+            .ReadFromJsonAsync<List<ParticipantEnrolmentViewModel>>();
+
+        // Return an empty list if the API response contains no enrolments.
+        return enrolments ?? new List<ParticipantEnrolmentViewModel>();
+    } // end of GetMyEnrolmentsAsync method
 
 
 
@@ -547,6 +571,31 @@ public class RaceDayApiClient
 
         return await response.Content.ReadFromJsonAsync<EventViewModel>();
     }// end of GetEventByIdAsync method
+
+
+
+    // Submits a participant's enrolment for a selected event category.
+    public async Task<bool> EnrolInEventAsync(
+        int eventId,
+        int categoryId,
+        ISession mvcSession)
+    {
+        // Prepare the category information expected by the Part 2 API.
+        var enrolmentData = new
+        {
+            CategoryId = categoryId
+        };
+
+        // Send the enrolment request using the participant's API session.
+        var response = await SendAuthenticatedAsync(
+            HttpMethod.Post,
+            $"api/events/{eventId}/enrolments",
+            mvcSession,
+            JsonContent.Create(enrolmentData));
+
+        // Return whether the API successfully created the enrolment.
+        return response.IsSuccessStatusCode;
+    } // end of EnrolInEventAsync method
 
 
 

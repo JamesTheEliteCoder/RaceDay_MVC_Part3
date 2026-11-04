@@ -88,6 +88,29 @@
                                         @Model.Event.DistanceKm km event
                                     </p>
                                 }
+
+                                @* Allow the participant to enrol in this category. *@
+                                <form asp-controller="Participant"
+                                      asp-action="Enrol"
+                                      method="post"
+                                      class="mt-3">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="eventId"
+                                           value="@Model.Event.EventId" />
+
+                                    <input type="hidden"
+                                           name="categoryId"
+                                           value="@category.CategoryId" />
+
+                                    <button type="submit"
+                                            class="btn btn-success w-100">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        Enrol Now
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

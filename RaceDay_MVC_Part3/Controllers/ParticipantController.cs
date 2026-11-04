@@ -158,6 +158,140 @@ public class ParticipantController : Controller
 
 
 
+    // Displays all events the signed-in participant has enrolled in.
+    [HttpGet]
+    public async Task<IActionResult> MyEvents()
+    {
+        // Confirm that the participant is logged in.
+        var userId = HttpContext.Session.GetInt32("UserId");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        // Only participants may access their personal enrolments.
+        var role = HttpContext.Session.GetString("Role");
+
+        if (!string.Equals(role, "Participant", StringComparison.Ordinal))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        try
+        {
+            // Retrieve the participant's enrolments through the Part 2 API.
+            var enrolments = await _apiClient.GetMyEnrolmentsAsync(
+                HttpContext.Session);
+
+            return View(enrolments);
+        }
+        catch (HttpRequestException ex)
+        {
+            // Log API communication errors for troubleshooting.
+            Console.WriteLine($"Error retrieving participant enrolments: {ex.Message}");
+
+            return StatusCode(
+                StatusCodes.Status502BadGateway,
+                "Unable to retrieve your events at this time.");
+        }
+    } // end of MyEvents method
+
+
+
+
+
+
+
+
+
+
+    // Submits a participant's enrolment for the selected event category.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Enrol(int eventId, int categoryId)
+    {
+        // Confirm that the participant is logged in.
+        var userId = HttpContext.Session.GetInt32("UserId");
+
+
+
+        /*temp lines
+        // Temporary diagnostic checks for the MVC session.
+        var sessionUserId = HttpContext.Session.GetInt32("UserId");
+
+
+        // Temporary diagnostic: display the names of all MVC session keys.
+        foreach (var key in HttpContext.Session.Keys)
+        {
+            Console.WriteLine($"MVC Session Key: {key}");
+        }
+
+        var sessionRole = HttpContext.Session.GetString("Role");
+
+        Console.WriteLine($"MVC Session UserId: {sessionUserId}");
+        Console.WriteLine($"MVC Session Role: {sessionRole}");
+
+        */
+
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        // Only participants may enrol in events.
+        var role = HttpContext.Session.GetString("Role");
+
+        if (!string.Equals(role, "Participant", StringComparison.Ordinal))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        // Ensure valid event and category IDs were submitted.
+        if (eventId <= 0 || categoryId <= 0)
+        {
+            TempData["ErrorMessage"] = "Invalid event or category selection.";
+            return RedirectToAction(nameof(BrowseEvents));
+        }
+
+        try
+        {
+            // Forward the enrolment request to the Part 2 API.
+            var enrolmentSuccessful = await _apiClient.EnrolInEventAsync(
+                eventId,
+                categoryId,
+                HttpContext.Session);
+
+            if (enrolmentSuccessful)
+            {
+                TempData["SuccessMessage"] =
+                    "Your enrolment was successful. Good luck with your race!";
+            }
+            else
+            {
+                TempData["ErrorMessage"] =
+                    "We couldn't complete your enrolment. You may already be enrolled in this category, or the selection may be invalid.";
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            // Log communication errors without exposing technical details to the participant.
+            Console.WriteLine($"Error submitting enrolment: {ex.Message}");
+
+            TempData["ErrorMessage"] =
+                "We're unable to process your enrolment right now. Please try again later.";
+        }
+
+        // Return the participant to the event they attempted to join.
+        return RedirectToAction(nameof(EventDetails), new { id = eventId });
+    }// end of Enrol method
+
+
+
+
+
+
 
 
 

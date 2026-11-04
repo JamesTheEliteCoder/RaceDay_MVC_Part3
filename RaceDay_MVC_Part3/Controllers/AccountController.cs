@@ -108,9 +108,7 @@ public class AccountController : Controller
         return View(new LoginViewModel());
     }
 
-    /// <summary>
     /// Submits login credentials to the Part 2 API.
-    /// </summary>
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginViewModel model)
