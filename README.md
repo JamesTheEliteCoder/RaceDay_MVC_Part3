@@ -158,7 +158,12 @@ Testing so far has included:
 - Confirming that participant and category details are included in the API response.
 - Displaying participant enrolments in the organiser interface.
 - Confirming that enrolment dates, categories, and statuses appear correctly.
-  
+- Retrieving the signed-in participant's personal enrolments through the API.
+- Confirming that the participant enrolment endpoint returns only records belonging to the authenticated participant.
+- Displaying personal event entries in the MVC My Events page.
+- Confirming that event names, dates, venues, categories, enrolment dates, and statuses are displayed correctly.
+- Testing navigation between the participant dashboard, My Events page, and event details page.
+
 Git and GitHub are used throughout development to track progress and maintain a history of meaningful changes. I commit features as they are completed rather than waiting until the entire application is developed.
 
 
@@ -188,5 +193,41 @@ Organisers can access the enrolment page directly from the event management page
 The page displays participants in a responsive Bootstrap table, showing their names, email addresses, selected categories, enrolment dates, and current statuses.
 
 A participant count is also displayed, together with an informative message when an event has no enrolments.
+
+
+
+
+
+## 11. Participant My Events
+
+The participant interface now includes a dedicated My Events page, allowing participants to view the race events they have enrolled in.
+
+This functionality builds on a new endpoint introduced in the Part 2 API, which retrieves enrolments belonging specifically to the currently authenticated participant.
+
+The API uses the participant ID stored in the API session to retrieve the relevant enrolment records. It also joins the associated event and category information so that participants can see more than just their enrolment IDs.
+
+The information returned by the API includes:
+
+- Enrolment ID.
+- Event ID and event name.
+- Event date.
+- Venue and city.
+- Selected category name.
+- Enrolment date.
+- Enrolment status.
+
+On the MVC side, a dedicated participant enrolment view model and API client method were introduced to retrieve the participant's personal enrolment information.
+
+A new My Events page was developed to display the information using responsive Bootstrap cards. Each card shows the event details, selected category, enrolment date, and current enrolment status.
+
+Participants can also navigate from their personal event entries to the corresponding event details page.
+
+The participant dashboard was updated to include a dedicated My Events navigation link, making it easier for participants to access their race entries.
+
+The API endpoint was tested successfully, returning only the enrolments belonging to the authenticated participant. The MVC implementation was also built successfully, and the My Events page was verified through the participant interface.
+
+
+
+
 
 The complete enrolment management process has been tested successfully. Existing participant enrolment information was retrieved from the API and displayed correctly in the MVC application.
