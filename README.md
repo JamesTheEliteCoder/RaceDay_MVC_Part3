@@ -231,3 +231,27 @@ The API endpoint was tested successfully, returning only the enrolments belongin
 
 
 The complete enrolment management process has been tested successfully. Existing participant enrolment information was retrieved from the API and displayed correctly in the MVC application.
+
+
+## 13. Participant Event Discovery and Details
+
+Enhanced the participant interface with event banners retrieved from Azure Blob Storage through the Part 2 API.
+
+### Features
+- Displays available race events in a card-based layout on the Discover Events page.
+- Displays each event's Azure-hosted banner image where one is available.
+- Provides a placeholder when an event does not have a banner.
+- Displays a larger banner on the individual Event Details page.
+- Shows event information, including the event name, description, date, distance, venue and location.
+- Displays the categories available for each event.
+- Allows participants to enrol in their chosen event category.
+- Retrieves private event banner images through the MVC image proxy, which communicates with the Part 2 API.
+- Does not expose Azure Blob Storage credentials or require direct MVC access to Azure Blob Storage.
+
+### Testing
+- Verified that Community 5K and Personal Record Breaker banners display correctly on the Discover Events page.
+- Verified that the corresponding banners display correctly on both Event Details pages.
+- Confirmed that banner images are retrieved through the MVC image proxy.
+- Confirmed that existing event information and category enrolment functionality remain operational.
+- Verified that events without banners can display a placeholder instead.
+
