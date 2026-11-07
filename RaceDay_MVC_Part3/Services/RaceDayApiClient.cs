@@ -600,6 +600,42 @@ public class RaceDayApiClient
 
 
 
+
+    // Retrieves an event banner image through the Part 2 API.
+    public async Task<(byte[] ImageData, string ContentType)?> GetEventBannerAsync(
+        int eventId,
+        ISession mvcSession)
+    {
+        // Request the banner using the participant's authenticated API session.
+        using var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            $"api/events/{eventId}/banner",
+            mvcSession);
+
+        // Return null if the event or its banner does not exist.
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        // Stop if the API reports another unsuccessful response.
+        response.EnsureSuccessStatusCode();
+
+        // Read the image bytes returned by the API.
+        var imageData = await response.Content.ReadAsByteArrayAsync();
+
+        // Retrieve the image's content type (JPEG, PNG or WebP).
+        var contentType = response.Content.Headers.ContentType?.MediaType
+            ?? "application/octet-stream";
+
+        // Return both the image data and its content type.
+        return (imageData, contentType);
+    }// end of GetEventBannerAsync method
+
+
+
+
+
     // Submits a participant's enrolment for a selected event category.
     public async Task<bool> EnrolInEventAsync(
         int eventId,
