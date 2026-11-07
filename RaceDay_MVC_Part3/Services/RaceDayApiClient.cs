@@ -277,7 +277,76 @@ public class RaceDayApiClient
 
         // Return the results, or an empty list if none are available.
         return results ?? new List<ParticipantResultViewModel>();
-    }
+    } // end of GetMyResultsAsync method
+
+
+
+
+
+
+
+    // Retrieves the profile of the currently signed-in user.
+    public async Task<ProfileViewModel?> GetMyProfileAsync(
+        ISession mvcSession)
+    {
+        // Send an authenticated request to the Part 2 API.
+        using var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            "api/users/me",
+            mvcSession);
+
+        // Return null if the API cannot find the user's profile.
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        // Check that the API request was successful.
+        response.EnsureSuccessStatusCode();
+
+        // Convert the API response into the MVC profile model.
+        return await response.Content.ReadFromJsonAsync<ProfileViewModel>();
+    }// end of GetMyProfileAsync method
+
+
+
+
+
+
+    // Updates the profile of the currently signed-in user.
+    public async Task UpdateMyProfileAsync(
+        EditProfileViewModel model,
+        ISession mvcSession)
+    {
+        // Prepare only the fields accepted by the Part 2 API.
+        var updateRequest = new
+        {
+            model.FirstName,
+            model.LastName,
+            model.PhoneNumber,
+            model.DateOfBirth
+        };
+
+        // Convert the update details into JSON.
+        using var content = JsonContent.Create(updateRequest);
+
+        // Send the authenticated PUT request to the API.
+        using var response = await SendAuthenticatedAsync(
+            HttpMethod.Put,
+            "api/users/me",
+            mvcSession,
+            content);
+
+        // Throw an exception if the API rejects the update.
+        response.EnsureSuccessStatusCode();
+    }//end of UpdateMyProfileAsync method
+
+
+
+
+
+
+
 
 
 

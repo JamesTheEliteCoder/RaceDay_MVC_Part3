@@ -83,5 +83,21 @@
             </div>
         </div>
 
-    </div>
-</div>
+        @* My Profile card *@
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5 card-title">My Profile</h2>
+
+                    <p class="card-text">
+                        View and update your personal information and account details.
+                    </p>
+
+                    <a asp-controller="Profile"
+                       asp-action="Index"
+                       class="btn btn-outline-success">
+                        View My Profile
+                    </a>
+                </div>
+            </div>
+        </div>
