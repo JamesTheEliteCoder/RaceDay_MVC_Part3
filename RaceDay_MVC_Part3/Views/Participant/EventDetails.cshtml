@@ -7,6 +7,30 @@
 
 <div class="container py-5">
 
+
+    @* Display the event banner retrieved through the MVC image proxy. *@
+@if (!string.IsNullOrWhiteSpace(Model.Event.BannerImageUrl))
+{
+    <div class="mb-4">
+        <img src="@Url.Action("EventBanner", "Images",
+            new { eventId = Model.Event.EventId })"
+             alt="@Model.Event.Name event banner"
+             class="img-fluid w-100 rounded shadow-sm"
+             style="max-height: 420px; object-fit: cover;" />
+    </div>
+}
+else
+{
+    <div class="bg-light rounded d-flex align-items-center justify-content-center mb-4"
+         style="height: 220px;">
+        <span class="text-muted">
+            <i class="bi bi-image me-2"></i>
+            Event banner unavailable
+        </span>
+    </div>
+} 
+
+
     @* Event heading and main information. *@
     <div class="mb-4">
         <span class="badge text-bg-success mb-2">
