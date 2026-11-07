@@ -25,4 +25,6 @@ public class EventViewModel
 
     // Timestamp recorded when the event was created.
     public DateTime CreatedOn { get; set; }
+    // Stores the URL reference for the event banner in Azure Blob Storage.
+    public string? BannerImageUrl { get; set; }
 }

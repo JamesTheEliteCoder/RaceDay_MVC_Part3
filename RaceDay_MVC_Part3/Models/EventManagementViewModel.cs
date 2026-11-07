@@ -7,6 +7,8 @@ public class EventManagementViewModel
 
     // Displays the event name on the management page.
     public string EventName { get; set; } = string.Empty;
+    // Holds the URL used by MVC to retrieve the event banner.
+    public string? BannerImageUrl { get; set; }
 
     // Holds all routes associated with this event.
     public List<RouteViewModel> Routes { get; set; } = new();

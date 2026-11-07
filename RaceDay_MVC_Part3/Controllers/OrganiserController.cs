@@ -334,6 +334,7 @@ public class OrganiserController : Controller
             {
                 EventId = selectedEvent.EventId,
                 EventName = selectedEvent.Name,
+                BannerImageUrl = selectedEvent.BannerImageUrl,
                 Routes = routes,
                 Categories = categories
             };
