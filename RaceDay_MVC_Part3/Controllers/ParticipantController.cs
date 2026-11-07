@@ -76,6 +76,15 @@ public class ParticipantController : Controller
             var events = await _apiClient.GetAvailableEventsAsync(
                 HttpContext.Session);
 
+            // TEMPORARY DIAGNOSTIC: Check whether banner URLs reach MVC.
+            foreach (var raceEvent in events)
+            {
+                Console.WriteLine(
+                    $"Event: {raceEvent.Name} | " +
+                    $"ID: {raceEvent.EventId} | " +
+                    $"Banner URL: {raceEvent.BannerImageUrl}");
+            }
+
             return View(events);
         }
         catch (HttpRequestException ex)
@@ -85,7 +94,12 @@ public class ParticipantController : Controller
             return StatusCode(
                 StatusCodes.Status502BadGateway,
                 "Unable to retrieve available events. Please try again later.");
+
         }
+
+
+
+
     } // end of BrowseEvents method
 
 
