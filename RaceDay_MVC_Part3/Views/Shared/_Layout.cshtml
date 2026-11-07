@@ -48,16 +48,24 @@
                                     </a>
                                 </li>
                             }
-                            else if (role == "Participant")
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark"
-                                       asp-controller="Participant"
-                                       asp-action="Index">
-                                        My RaceDay
-                                    </a>
-                                </li>
-                            }
+                          else if (role == "Participant")
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark"
+           asp-controller="Participant"
+           asp-action="Index">
+            My RaceDay
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link text-dark"
+           asp-controller="Profile"
+           asp-action="Index">
+            My Profile
+        </a>
+    </li>
+}
                         }
                     </ul>
 
