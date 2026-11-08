@@ -281,3 +281,16 @@ Implemented participant profile viewing, editing and profile-picture management.
 - Successfully retrieved and displayed private profile pictures.
 - Verified that the 10 MB upload limit is enforced.
 - Confirmed that profile-picture functionality works through the API rather than direct database or Blob Storage access from MVC.
+
+  ## 15. Docker Deployment and Containerisation
+
+The RaceDay MVC application has been containerised using Docker, allowing it to run independently of the local Visual Studio development environment.
+
+### Docker Configuration
+- Created a multi-stage Dockerfile using the .NET 10 SDK and ASP.NET Core runtime images.
+- Created a `.dockerignore` file to exclude unnecessary development and build files.
+- Configured the application to listen on port 8080 inside the container.
+- Configured the API base URL through a Docker environment variable.
+- Used `host.docker.internal` to allow the MVC container to communicate with the Part 2 API running on the host machine.
+
+
