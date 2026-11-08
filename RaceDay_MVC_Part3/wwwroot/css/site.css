@@ -659,3 +659,16 @@ a {
     }
 
 
+    /* Organiser results management */
+
+    .enrolment-status.pending-result {
+        color: #FFC857;
+        background: rgba(255, 200, 87, 0.12);
+    }
+
+.event-dashboard-card form .form-label {
+    color: var(--raceday-text);
+}
+
+
+

@@ -1,178 +1,359 @@
-﻿@model RaceDay_MVC_Part3.Models.EventResultsViewModel
+﻿
+@model RaceDay_MVC_Part3.Models.EventResultsViewModel
 
 @{
     ViewData["Title"] = "Manage Results";
 }
 
+<div class="container py-5">
 
+    <!-- Page heading -->
+    <div class="dashboard-hero p-4 p-md-5 mb-4">
 
+        <span class="dashboard-eyebrow">ORGANISER PORTAL</span>
 
-<div class="container mt-4">
+        <h1 class="display-5 fw-bold mt-2">Manage Results</h1>
 
-    <!-- Page heading and selected event details -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <span class="badge bg-primary mb-2">Organiser</span>
-            <h2 class="fw-bold">Manage Results</h2>
-            <p class="text-muted mb-0">
-                Record and update finishing positions and times for
-                <strong>@Model.EventName</strong>.
-            </p>
-        </div>
+        <h4 class="mt-3">@Model.EventName</h4>
 
-        <a asp-controller="Organiser"
-           asp-action="ManageEvent"
-           asp-route-id="@Model.EventId"
-           class="btn btn-outline-secondary">
-            Back to Event
-        </a>
+        <p class="lead mb-0">
+            Record and update participant finishing positions and race times.
+        </p>
+
     </div>
 
-    <!-- Display all participants enrolled in this event -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">Enrolled Participants</h5>
+    <!-- Enrolment overview -->
+    <div class="event-dashboard-card mb-4">
+
+        <div class="event-card-accent"></div>
+
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between
+                        align-items-center flex-wrap gap-3">
+
+                <div>
+                    <span class="dashboard-eyebrow">RACE ADMINISTRATION</span>
+                    <h3 class="fw-bold mt-2 mb-1">
+                        Enrolled Participants
+                    </h3>
+                    <p class="text-muted mb-0">
+                        Review registrations and track result progress.
+                    </p>
+                </div>
+
+                <div class="enrolment-count">
+                    <span class="enrolment-count-number">
+                        @(Model.Enrolments?.Count ?? 0)
+                    </span>
+                    <span class="enrolment-count-label">
+                        PARTICIPANTS
+                    </span>
+                </div>
+
+            </div>
+
         </div>
 
-        <div class="card-body">
+    </div>
+
+    <!-- Participant registration table -->
+    <div class="event-dashboard-card mb-5">
+
+        <div class="event-card-accent"></div>
+
+        <div class="card-body p-4">
+
             @if (Model.Enrolments == null || !Model.Enrolments.Any())
             {
-                <p class="text-muted mb-0">
-                    No participants have enrolled in this event yet.
-                </p>
+                <div class="text-center py-5">
+
+                    <i class="bi bi-people display-3 text-muted"></i>
+
+                    <h4 class="fw-bold mt-3">No Participants Yet</h4>
+
+                    <p class="text-muted mb-0">
+                        Results can be recorded once participants have enrolled.
+                    </p>
+
+                </div>
             }
             else
             {
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+
+                    <table class="table table-hover align-middle enrolment-table">
+
                         <thead>
                             <tr>
-                                <th>Participant</th>
-                                <th>Email</th>
-                                <th>Category</th>
-                                <th>Enrolment Date</th>
-                                <th>Status</th>
-                                <th>Result Status</th>
+                                <th>PARTICIPANT</th>
+                                <th>EMAIL</th>
+                                <th>CATEGORY</th>
+                                <th>ENROLMENT DATE</th>
+                                <th>STATUS</th>
+                                <th>RESULT STATUS</th>
                             </tr>
                         </thead>
+
                         <tbody>
+
                             @foreach (var enrolment in Model.Enrolments)
                             {
                                 var hasResult = Model.Results.Any(
                                     result => result.EnrolmentId == enrolment.EnrolmentId);
 
                                 <tr>
-                                    <td>@enrolment.ParticipantName</td>
-                                    <td>@enrolment.ParticipantEmail</td>
-                                    <td>@enrolment.CategoryName</td>
-                                    <td>@enrolment.EnrolmentDate.ToString("dd MMM yyyy")</td>
+
                                     <td>
-                                        <span class="badge bg-success">
+                                        <div class="participant-identity">
+
+                                            <div class="participant-avatar">
+                                                <i class="bi bi-person-fill"></i>
+                                            </div>
+
+                                            <div>
+                                                <strong>
+                                                    @enrolment.ParticipantName
+                                                </strong>
+
+                                                <small>
+                                                    ID: @enrolment.ParticipantId
+                                                </small>
+                                            </div>
+
+                                        </div>
+                                    </td>
+
+                                    <td>@enrolment.ParticipantEmail</td>
+
+                                    <td>
+                                        <span class="category-label">
+                                            @enrolment.CategoryName
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        @enrolment.EnrolmentDate.ToString("dd MMM yyyy")
+                                    </td>
+
+                                    <td>
+                                        <span class="enrolment-status confirmed">
                                             @enrolment.Status
                                         </span>
                                     </td>
+
                                     <td>
                                         @if (hasResult)
                                         {
-                                            <span class="badge bg-success">Recorded</span>
+                                            <span class="enrolment-status confirmed">
+                                                <i class="bi bi-check-circle-fill me-1"></i>
+                                                Recorded
+                                            </span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-warning text-dark">Pending</span>
+                                            <span class="enrolment-status pending-result">
+                                                <i class="bi bi-clock me-1"></i>
+                                                Pending
+                                            </span>
                                         }
                                     </td>
+
                                 </tr>
                             }
+
                         </tbody>
+
                     </table>
+
                 </div>
             }
+
         </div>
+
     </div>
 
-    <!-- Display and manage participant finishing results -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-dark text-white">
-            <h5 class="mb-0">Finishing Results</h5>
+    <!-- Finishing results section -->
+    <div class="d-flex justify-content-between
+                align-items-center flex-wrap gap-3 mb-4">
+
+        <div>
+            <span class="dashboard-eyebrow">RACE PERFORMANCE</span>
+            <h2 class="fw-bold mt-2 mb-1">Finishing Results</h2>
+            <p class="text-muted mb-0">
+                Enter or update each participant's finishing position and time.
+            </p>
         </div>
 
-        <div class="card-body">
-            @if (Model.Enrolments == null || !Model.Enrolments.Any())
-            {
-                <p class="text-muted mb-0">
-                    Results can be recorded once participants have enrolled.
-                </p>
-            }
-            else
-            {
-                @foreach (var enrolment in Model.Enrolments)
-                {
-                    var result = Model.Results.FirstOrDefault(
-                        item => item.EnrolmentId == enrolment.EnrolmentId);
+        <span class="event-type-badge">
+            <i class="bi bi-trophy me-1"></i>
+            RESULTS MANAGEMENT
+        </span>
 
-                    <div class="border rounded p-3 mb-3">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <h6 class="fw-bold mb-1">@enrolment.ParticipantName</h6>
-                                <small class="text-muted">@enrolment.CategoryName</small>
+    </div>
+
+    @if (Model.Enrolments == null || !Model.Enrolments.Any())
+    {
+        <div class="event-dashboard-card p-4 text-center">
+            <i class="bi bi-stopwatch display-3 text-muted"></i>
+
+            <h5 class="fw-bold mt-3">No Results Available</h5>
+
+            <p class="text-muted mb-0">
+                Results can be recorded once participants have enrolled.
+            </p>
+        </div>
+    }
+    else
+    {
+        @foreach (var enrolment in Model.Enrolments)
+        {
+            var result = Model.Results.FirstOrDefault(
+                item => item.EnrolmentId == enrolment.EnrolmentId);
+
+            <div class="event-dashboard-card mb-4">
+
+                <div class="event-card-accent"></div>
+
+                <div class="card-body p-4">
+
+                    <!-- Participant details -->
+                    <div class="d-flex justify-content-between
+                                align-items-center flex-wrap gap-3 mb-4">
+
+                        <div class="participant-identity">
+
+                            <div class="participant-avatar">
+                                <i class="bi bi-person-fill"></i>
                             </div>
 
-                            @if (result != null)
-                            {
-                                <span class="badge bg-success">Result Recorded</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-warning text-dark">Awaiting Result</span>
-                            }
+                            <div>
+                                <h5 class="fw-bold mb-1">
+                                    @enrolment.ParticipantName
+                                </h5>
+
+                                <small class="text-muted">
+                                    @enrolment.CategoryName
+                                </small>
+                            </div>
+
                         </div>
 
-                        <form asp-controller="Organiser"
-                              asp-action="@(result == null ? "RecordResult" : "UpdateResult")"
-                              method="post">
+                        @if (result != null)
+                        {
+                            <span class="enrolment-status confirmed">
+                                <i class="bi bi-check-circle-fill me-1"></i>
+                                Result Recorded
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="enrolment-status pending-result">
+                                <i class="bi bi-clock me-1"></i>
+                                Awaiting Result
+                            </span>
+                        }
 
-                            @Html.AntiForgeryToken()
-
-                            <input type="hidden" name="eventId" value="@Model.EventId" />
-                            <input type="hidden" name="enrolmentId" value="@enrolment.EnrolmentId" />
-
-                            <div class="row align-items-end">
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Finishing Position</label>
-                                    <input type="number"
-                                           name="finishingPosition"
-                                           class="form-control"
-                                           min="1"
-                                           required
-                                           value="@(result?.FinishingPosition)" />
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">Finish Time</label>
-                                    <input type="time"
-                                           name="finishTime"
-                                           class="form-control"
-                                           step="1"
-                                           required
-                                           value="@(result?.FinishTime.ToString("HH:mm:ss"))" />
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <button type="submit" class="btn btn-primary w-100">
-                                        @(result == null ? "Record Result" : "Update Result")
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
                     </div>
-                }
-            }
-        </div>
+
+                    <form asp-controller="Organiser"
+                          asp-action="@(result == null ? "RecordResult" : "UpdateResult")"
+                          method="post">
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden"
+                               name="eventId"
+                               value="@Model.EventId" />
+
+                        <input type="hidden"
+                               name="enrolmentId"
+                               value="@enrolment.EnrolmentId" />
+
+                        <div class="row align-items-end g-3">
+
+                            <div class="col-md-4">
+
+                                <label class="form-label fw-semibold">
+                                    Finishing Position
+                                </label>
+
+                                <input type="number"
+                                       name="finishingPosition"
+                                       class="form-control"
+                                       min="1"
+                                       required
+                                       value="@(result?.FinishingPosition)" />
+
+                            </div>
+
+                            <div class="col-md-4">
+
+                                <label class="form-label fw-semibold">
+                                    Finish Time
+                                </label>
+
+                                <input type="time"
+                                       name="finishTime"
+                                       class="form-control"
+                                       step="1"
+                                       required
+                                       value="@(result?.FinishTime.ToString("HH:mm:ss"))" />
+
+                            </div>
+
+                            <div class="col-md-4">
+
+                                <button type="submit"
+                                        class="btn btn-raceday w-100">
+
+                                    @if (result == null)
+                                    {
+                                        <i class="bi bi-plus-circle me-1"></i>
+                                        <text>Record Result</text>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-arrow-repeat me-1"></i>
+                                        <text>Update Result</text>
+                                    }
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        }
+    }
+
+    <!-- Navigation -->
+    <div class="mt-4">
+
+        <a asp-controller="Organiser"
+           asp-action="ManageEvent"
+           asp-route-id="@Model.EventId"
+           class="btn btn-raceday-outline me-2">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Event
+
+        </a>
+
+        <a asp-controller="Organiser"
+           asp-action="Dashboard"
+           class="btn btn-raceday-outline">
+
+            <i class="bi bi-house me-1"></i>
+            Dashboard
+
+        </a>
+
     </div>
 
-    <a asp-controller="Organiser"
-       asp-action="Dashboard"
-       class="btn btn-outline-secondary mb-4">
-        Back to Dashboard
-    </a>
 </div>
