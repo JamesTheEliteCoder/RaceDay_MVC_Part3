@@ -255,3 +255,42 @@ Enhanced the participant interface with event banners retrieved from Azure Blob 
 - Confirmed that existing event information and category enrolment functionality remain operational.
 - Verified that events without banners can display a placeholder instead.
 
+
+
+## 14. Participant Profile Management
+
+Implemented participant profile viewing, editing and profile-picture management.
+
+### Features
+- Participants can view their personal account information.
+- Participants can update their first name, last name, phone number and date of birth.
+- Participants can upload or replace their profile picture.
+- Profile pictures are uploaded through the Part 2 API and stored in Azure Blob Storage.
+- Profile-picture URLs are saved in the database.
+- Private profile pictures are retrieved through authenticated API endpoints.
+- Profile pictures are displayed on the participant profile page.
+- Profile-picture uploads support JPEG, PNG and WebP images, with a maximum file size of 12 MB.
+- Profile management is restricted to authenticated participants.
+
+### Testing
+- Successfully retrieved participant profile information through the MVC application.
+- Verified profile information updates through the Part 2 API.
+- Successfully uploaded profile pictures through the MVC application.
+- Verified profile pictures are stored in Azure Blob Storage.
+- Confirmed profile-picture URLs are persisted in the database.
+- Successfully retrieved and displayed private profile pictures.
+- Verified that the 10 MB upload limit is enforced.
+- Confirmed that profile-picture functionality works through the API rather than direct database or Blob Storage access from MVC.
+
+  ## 15. Docker Deployment and Containerisation
+
+The RaceDay MVC application has been containerised using Docker, allowing it to run independently of the local Visual Studio development environment.
+
+### Docker Configuration
+- Created a multi-stage Dockerfile using the .NET 10 SDK and ASP.NET Core runtime images.
+- Created a `.dockerignore` file to exclude unnecessary development and build files.
+- Configured the application to listen on port 8080 inside the container.
+- Configured the API base URL through a Docker environment variable.
+- Used `host.docker.internal` to allow the MVC container to communicate with the Part 2 API running on the host machine.
+
+
