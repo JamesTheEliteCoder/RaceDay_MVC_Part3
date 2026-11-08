@@ -407,3 +407,35 @@ a {
     border-top: 1px solid var(--raceday-border);
     background: rgba(0, 0, 0, 0.12);
 }
+
+
+/* Participant race results */
+
+.result-highlight {
+    background: linear-gradient(135deg, #242D3A, #191F2A);
+    border: 1px solid var(--raceday-border);
+    border-radius: 12px;
+}
+
+.result-label {
+    display: block;
+    color: var(--raceday-muted);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.result-position {
+    color: var(--raceday-orange);
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1.3;
+    margin: 0.5rem 0;
+}
+
+.result-time {
+    color: var(--raceday-orange) !important;
+    font-size: 1.1rem !important;
+    font-weight: 800;
+    letter-spacing: 1px;
+}

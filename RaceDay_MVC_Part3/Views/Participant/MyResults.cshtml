@@ -1,82 +1,166 @@
-﻿@model List<RaceDay_MVC_Part3.Models.ParticipantResultViewModel>
+﻿
+@model List<RaceDay_MVC_Part3.Models.ParticipantResultViewModel>
 
 @{
     ViewData["Title"] = "My Race Results";
 }
 
-<div class="container mt-4">
+<div class="container py-5">
 
-    <div class="mb-4">
-        <h2 class="fw-bold">My Race Results</h2>
-        <p class="text-muted">
-            Track your race performances and see how you placed in each event.
+    @* Results page heading. *@
+    <div class="dashboard-hero mb-5 p-4 p-md-5">
+
+        <span class="dashboard-eyebrow">
+            PARTICIPANT PORTAL
+        </span>
+
+        <h1 class="display-5 fw-bold mt-3 mb-2">
+            My Race Results
+        </h1>
+
+        <p class="lead mb-0">
+            Every race tells a story.
+            Track your performances, celebrate your achievements
+            and see how you placed against the competition.
         </p>
+
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        @* Empty state when no results have been recorded. *@
+        <div class="card event-dashboard-card">
+            <div class="card-body text-center py-5">
+
+                <div class="display-4 mb-3">🏆</div>
+
+                <h2 class="h4 fw-bold mb-3">
+                    No Results Yet
+                </h2>
+
+                <p class="text-muted mb-4">
+                    Your race results will appear here once an organiser
+                    has recorded your finishing position and time.
+                </p>
+
+                <a asp-controller="Participant"
+                   asp-action="BrowseEvents"
+                   class="btn btn-raceday">
+                    Browse Upcoming Events
+                </a>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        @* Display each recorded race result. *@
+        <div class="row g-4">
+
+            @foreach (var result in Model)
+            {
+                <div class="col-12 col-md-6 col-xl-4">
+
+                    <article class="card event-dashboard-card h-100">
+
+                        <div class="event-card-accent"></div>
+
+                        <div class="card-body p-4">
+
+                            @* Event information. *@
+                            <div class="mb-4">
+
+                                <span class="event-type-badge">
+                                    RACE RESULT
+                                </span>
+
+                                <h2 class="h4 card-title fw-bold mt-3 mb-2">
+                                    @result.EventName
+                                </h2>
+
+                                <p class="text-muted mb-0">
+                                    <span class="me-2">📅</span>
+                                    @result.EventDate.ToString("dd MMMM yyyy")
+                                </p>
+
+                            </div>
+
+                            <div class="divider"
+                                 style="border-top: 1px solid var(--raceday-border);">
+                            </div>
+
+                            @* Finishing position highlight. *@
+                            <div class="result-highlight text-center my-4 p-4">
+
+                                <small class="result-label">
+                                    FINISHING POSITION
+                                </small>
+
+                                <div class="result-position">
+                                    @GetOrdinal(result.FinishingPosition)
+                                </div>
+
+                                <p class="text-muted small mb-0">
+                                    Out of @result.TotalCategoryResults recorded results
+                                </p>
+
+                            </div>
+
+                            @* Category and finishing time. *@
+                            <div class="event-details">
+
+                                <div class="event-detail-row">
+
+                                    <span class="event-detail-icon">🏃</span>
+
+                                    <div>
+                                        <small>RACE CATEGORY</small>
+
+                                        <strong>
+                                            @result.CategoryName
+                                        </strong>
+                                    </div>
+
+                                </div>
+
+                                <div class="event-detail-row">
+
+                                    <span class="event-detail-icon">⏱️</span>
+
+                                    <div>
+                                        <small>FINISHING TIME</small>
+
+                                        <strong class="result-time">
+                                            @result.FinishTime.ToString("hh\\:mm\\:ss")
+                                        </strong>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                </div>
+            }
+
+        </div>
+    }
+
+    @* Return to the participant dashboard. *@
+    <div class="mt-5">
+
+        <a asp-controller="Participant"
+           asp-action="Index"
+           class="btn btn-raceday-outline">
+            &larr; Back to Dashboard
+        </a>
+
     </div>
 
 </div>
-
-@if (Model == null || !Model.Any())
-{
-    <!-- Display a friendly message when the participant has no recorded results. -->
-    <div class="card shadow-sm border-0 p-4 text-center">
-        <div class="card-body">
-            <h4 class="fw-bold">No Results Yet</h4>
-
-            <p class="text-muted">
-                Your race results will appear here once an organiser
-                has recorded your finishing position and time.
-            </p>
-
-            <a asp-controller="Participant"
-               asp-action="BrowseEvents"
-               class="btn btn-primary mt-2">
-                Browse Upcoming Events
-            </a>
-        </div>
-    </div>
-}
-else
-{
-    <!-- Display each recorded race result in its own card. -->
-    <div class="row g-4">
-        @foreach (var result in Model)
-        {
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-body">
-
-                        <h5 class="card-title fw-bold">
-                            @result.EventName
-                        </h5>
-
-                        <p class="text-muted mb-3">
-                            @result.EventDate.ToString("dd MMMM yyyy")
-                        </p>
-
-                        <hr />
-
-                        <p>
-                            <strong>Category:</strong>
-                            @result.CategoryName
-                        </p>
-
-                        <p>
-                            <strong>Finishing Position:</strong>
-                            @GetOrdinal(result.FinishingPosition)
-                            out of @result.TotalCategoryResults recorded results
-                        </p>
-
-                        <p>
-                            <strong>Finishing Time:</strong>
-                            @result.FinishTime.ToString("hh\\:mm\\:ss")
-                        </p>
-
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-}
 
 @functions {
     // Converts a finishing position into its ordinal representation.
