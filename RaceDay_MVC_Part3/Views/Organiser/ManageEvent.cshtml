@@ -1,90 +1,133 @@
-﻿@model RaceDay_MVC_Part3.Models.EventManagementViewModel
+﻿
+@model RaceDay_MVC_Part3.Models.EventManagementViewModel
 
 @{
     ViewData["Title"] = "Manage Event";
 }
 
-<div class="container mt-4">
+<div class="container py-5">
 
-    <!-- Page heading -->
-    <div class="mb-4">
-        <h1>Manage Event</h1>
-        <h4 class="text-muted">@Model.EventName</h4>
-        <p class="text-muted">
-            Manage the routes and participant categories for this event.
+    <!-- Event overview -->
+    <div class="dashboard-hero p-4 p-md-5 mb-4">
+        <span class="dashboard-eyebrow">ORGANISER PORTAL</span>
+
+        <h1 class="display-5 fw-bold mt-2">Manage Event</h1>
+
+        <h4 class="mt-3">@Model.EventName</h4>
+
+        <p class="lead mb-0">
+            Manage event routes, participant categories and race configuration.
         </p>
     </div>
 
+    <!-- Event banner -->
     @if (!string.IsNullOrWhiteSpace(Model.BannerImageUrl))
     {
-        <div class="mb-4">
+        <div class="manage-event-banner mb-5">
             <img src="@Url.Action("EventBanner", "Images", new { eventId = Model.EventId })"
                  alt="@Model.EventName event banner"
-                 class="img-fluid rounded shadow-sm"
-                 style="max-height: 320px; width: 100%; object-fit: cover;" />
+                 class="img-fluid" />
         </div>
     }
     else
     {
-        <div class="alert alert-secondary mb-4">
-            No banner image has been uploaded for this event yet.
+        <div class="event-dashboard-card p-4 mb-5">
+            <p class="text-muted mb-0">
+                <i class="bi bi-image me-2"></i>
+                No banner image has been uploaded for this event yet.
+            </p>
         </div>
     }
 
-
-
     <!-- Routes section -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Event Routes</h2>
+    <section class="mb-5">
 
-        <a asp-controller="Organiser"
-           asp-action="CreateRoute"
-           asp-route-eventId="@Model.EventId"
-           class="btn btn-primary">
-            <i class="bi bi-plus-circle me-1"></i>
-            Add Route
-        </a>
-    </div>
+        <div class="d-flex justify-content-between
+                    align-items-center flex-wrap gap-3 mb-4">
+
+            <div>
+                <span class="dashboard-eyebrow">RACE CONFIGURATION</span>
+                <h2 class="fw-bold mt-2 mb-1">Event Routes</h2>
+                <p class="text-muted mb-0">
+                    Manage the courses available for this event.
+                </p>
+            </div>
+
+            <a asp-controller="Organiser"
+               asp-action="CreateRoute"
+               asp-route-eventId="@Model.EventId"
+               class="btn btn-raceday">
+                <i class="bi bi-plus-circle me-1"></i>
+                Add Route
+            </a>
+
+        </div>
 
         @if (Model.Routes.Count == 0)
         {
-            <div class="alert alert-info">
-                No routes have been added to this event yet.
+            <div class="event-dashboard-card p-4 text-center">
+                <i class="bi bi-signpost-2 display-4 text-muted"></i>
+                <h5 class="fw-bold mt-3">No Routes Yet</h5>
+                <p class="text-muted mb-0">
+                    Add a route to define the course for this event.
+                </p>
             </div>
         }
         else
         {
-            <div class="row">
+            <div class="row g-4">
+
                 @foreach (var route in Model.Routes)
                 {
-                    <div class="col-md-6 mb-3">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
+                    <div class="col-md-6">
 
-                                <h5 class="card-title">@route.RouteName</h5>
+                        <div class="event-dashboard-card h-100">
+                            <div class="event-card-accent"></div>
 
-                                <p class="text-muted">
-                                    @route.DistanceKm km
-                                </p>
+                            <div class="card-body p-4">
 
-                                <p>
-                                    <strong>Areas covered:</strong>
-                                    @route.AreasCovered
-                                </p>
+                                <div class="d-flex justify-content-between
+                                            align-items-start gap-3 mb-3">
 
-                                <p>
-                                    <strong>Start:</strong>
-                                    @route.StartLocation
-                                </p>
+                                    <h5 class="card-title fw-bold mb-0">
+                                        @route.RouteName
+                                    </h5>
 
-                                <p>
-                                    <strong>Finish:</strong>
-                                    @route.FinishLocation
-                                </p>
+                                    <span class="event-type-badge">
+                                        @route.DistanceKm km
+                                    </span>
+
+                                </div>
+
+                                <div class="event-detail-row mb-3">
+                                    <span class="event-detail-icon">📍</span>
+                                    <div>
+                                        <small>AREAS COVERED</small>
+                                        <span>@route.AreasCovered</span>
+                                    </div>
+                                </div>
+
+                                <div class="event-detail-row mb-3">
+                                    <span class="event-detail-icon">🏁</span>
+                                    <div>
+                                        <small>START LOCATION</small>
+                                        <span>@route.StartLocation</span>
+                                    </div>
+                                </div>
+
+                                <div class="event-detail-row mb-3">
+                                    <span class="event-detail-icon">🏆</span>
+                                    <div>
+                                        <small>FINISH LOCATION</small>
+                                        <span>@route.FinishLocation</span>
+                                    </div>
+                                </div>
 
                                 @if (!string.IsNullOrWhiteSpace(route.Description))
                                 {
-                                    <p>@route.Description</p>
+                                    <p class="text-muted mt-3 mb-3">
+                                        @route.Description
+                                    </p>
                                 }
 
                                 @if (!string.IsNullOrWhiteSpace(route.MapUrl))
@@ -92,112 +135,172 @@
                                     <a href="@route.MapUrl"
                                        target="_blank"
                                        rel="noopener noreferrer"
-                                       class="btn btn-sm btn-outline-primary">
+                                       class="btn btn-raceday-outline btn-sm mt-2">
+                                        <i class="bi bi-map me-1"></i>
                                         View Route Map
                                     </a>
                                 }
 
                             </div>
                         </div>
+
                     </div>
                 }
+
             </div>
         }
+
     </section>
 
     <!-- Categories section -->
-    <section>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Event Categories</h2>
+    <section class="mb-5">
 
-        <a asp-controller="Organiser"
-           asp-action="CreateCategory"
-           asp-route-eventId="@Model.EventId"
-           class="btn btn-primary">
-            <i class="bi bi-plus-circle me-1"></i>
-            Add Category
-        </a>
-    </div>
+        <div class="d-flex justify-content-between
+                    align-items-center flex-wrap gap-3 mb-4">
+
+            <div>
+                <span class="dashboard-eyebrow">PARTICIPANT CLASSIFICATION</span>
+                <h2 class="fw-bold mt-2 mb-1">Event Categories</h2>
+                <p class="text-muted mb-0">
+                    Manage the categories participants can enter.
+                </p>
+            </div>
+
+            <a asp-controller="Organiser"
+               asp-action="CreateCategory"
+               asp-route-eventId="@Model.EventId"
+               class="btn btn-raceday">
+                <i class="bi bi-plus-circle me-1"></i>
+                Add Category
+            </a>
+
+        </div>
 
         @if (Model.Categories.Count == 0)
         {
-            <div class="alert alert-info">
-                No categories have been added to this event yet.
+            <div class="event-dashboard-card p-4 text-center">
+                <i class="bi bi-people display-4 text-muted"></i>
+                <h5 class="fw-bold mt-3">No Categories Yet</h5>
+                <p class="text-muted mb-0">
+                    Add participant categories to make this event available for enrolment.
+                </p>
             </div>
         }
         else
         {
-            <div class="row">
+            <div class="row g-4">
+
                 @foreach (var category in Model.Categories)
                 {
-                    <div class="col-md-6 mb-3">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
+                    <div class="col-md-6">
 
-                                <h5 class="card-title">@category.Name</h5>
+                        <div class="event-dashboard-card h-100">
+                            <div class="event-card-accent"></div>
 
-                                <span class="badge bg-primary">
-                                    @category.CategoryType
-                                </span>
+                            <div class="card-body p-4">
 
-                                <p class="mt-3">
-                                    <strong>Associated route:</strong>
-                                    @(Model.Routes.FirstOrDefault(route =>
-                                        route.RouteId == category.RouteId)?.RouteName ?? "Route unavailable")
-                                </p>
+                                <div class="d-flex justify-content-between
+                                            align-items-start gap-3 mb-3">
+
+                                    <h5 class="card-title fw-bold mb-0">
+                                        @category.Name
+                                    </h5>
+
+                                    <span class="event-type-badge">
+                                        @category.CategoryType
+                                    </span>
+
+                                </div>
+
+                                <div class="event-detail-row mb-3">
+                                    <span class="event-detail-icon">🛣️</span>
+                                    <div>
+                                        <small>ASSOCIATED ROUTE</small>
+                                        <span>
+                                            @(Model.Routes.FirstOrDefault(route =>
+                                                route.RouteId == category.RouteId)?.RouteName
+                                                ?? "Route unavailable")
+                                        </span>
+                                    </div>
+                                </div>
 
                                 @if (category.CategoryType == "Age")
                                 {
-                                    <p>
-                                        <strong>Age range:</strong>
-                                        @(category.MinimumAge?.ToString() ?? "No minimum")
-                                        –
-                                        @(category.MaximumAge?.ToString() ?? "No maximum")
-                                    </p>
+                                    <div class="event-detail-row">
+                                        <span class="event-detail-icon">👥</span>
+                                        <div>
+                                            <small>AGE RANGE</small>
+                                            <span>
+                                                @(category.MinimumAge?.ToString() ?? "No minimum")
+                                                –
+                                                @(category.MaximumAge?.ToString() ?? "No maximum")
+                                            </span>
+                                        </div>
+                                    </div>
                                 }
                                 else
                                 {
-                                    <p class="text-muted">
-                                        This category is based on route distance.
-                                    </p>
+                                    <div class="event-detail-row">
+                                        <span class="event-detail-icon">📏</span>
+                                        <div>
+                                            <small>CATEGORY BASIS</small>
+                                            <span>Route distance</span>
+                                        </div>
+                                    </div>
                                 }
 
                             </div>
                         </div>
+
                     </div>
                 }
+
             </div>
         }
+
     </section>
 
+    <!-- Event management actions -->
+    <section class="event-dashboard-card mb-4">
 
-<div class="mt-4">
+        <div class="event-card-accent"></div>
+
+        <div class="card-body p-4">
+
+            <span class="dashboard-eyebrow">EVENT OPERATIONS</span>
+
+            <h4 class="fw-bold mt-2 mb-4">Manage Participants & Results</h4>
+
+            <div class="d-flex flex-wrap gap-3">
+
+                <a asp-controller="Organiser"
+                   asp-action="ViewEnrolments"
+                   asp-route-id="@Model.EventId"
+                   class="btn btn-raceday">
+                    <i class="bi bi-people-fill me-1"></i>
+                    View Enrolments
+                </a>
+
+                <a asp-controller="Organiser"
+                   asp-action="ManageResults"
+                   asp-route-id="@Model.EventId"
+                   class="btn btn-raceday-outline">
+                    <i class="bi bi-trophy me-1"></i>
+                    Manage Results
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Return to dashboard -->
     <a asp-controller="Organiser"
-       asp-action="ViewEnrolments"
-       asp-route-id="@Model.EventId"
-       class="btn btn-success">
-        <i class="bi bi-people-fill me-1"></i>
-        View Enrolments
+       asp-action="Dashboard"
+       class="btn btn-raceday-outline">
+        <i class="bi bi-arrow-left me-1"></i>
+        Back to Dashboard
     </a>
-
-    <a asp-controller="Organiser"
-       asp-action="ManageResults"
-       asp-route-id="@Model.EventId"
-       class="btn btn-primary ms-2">
-        <i class="bi bi-trophy"></i> Manage Results
-    </a>
-</div>
-
-
-
-
-    <!-- Return to the organiser dashboard -->
-    <div class="mt-4">
-        <a asp-controller="Organiser"
-           asp-action="Dashboard"
-           class="btn btn-outline-secondary">
-            Back to Dashboard
-        </a>
-    </div>
 
 </div>

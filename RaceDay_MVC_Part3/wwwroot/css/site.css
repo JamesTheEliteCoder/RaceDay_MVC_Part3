@@ -525,3 +525,20 @@ a {
     font-weight: 800;
 }
 
+
+/* Organiser event management */
+
+.manage-event-banner {
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid var(--raceday-border);
+    background: var(--raceday-surface);
+}
+
+    .manage-event-banner img {
+        display: block;
+        width: 100%;
+        max-height: 320px;
+        object-fit: cover;
+    }
+
