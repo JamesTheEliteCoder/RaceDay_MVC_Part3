@@ -1,113 +1,212 @@
-﻿@model RaceDay_MVC_Part3.Models.CreateRouteViewModel
+﻿
+@model RaceDay_MVC_Part3.Models.CreateRouteViewModel
 
 @{
     ViewData["Title"] = "Add Route";
 }
 
-<div class="container mt-4">
+<div class="container py-5">
 
-    <div class="mb-4">
-        <h1>Add Event Route</h1>
-        <p class="text-muted">
-            Enter the details of the route you want to add to this event.
+    <!-- Page heading -->
+    <div class="dashboard-hero p-4 p-md-5 mb-4">
+
+        <span class="dashboard-eyebrow">ORGANISER PORTAL</span>
+
+        <h1 class="display-5 fw-bold mt-2">Add Event Route</h1>
+
+        <p class="lead mb-0">
+            Design the course participants will follow during your event.
         </p>
+
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+    <!-- Route form -->
+    <div class="event-dashboard-card">
+
+        <div class="event-card-accent"></div>
+
+        <div class="card-body p-4 p-md-5">
 
             <form asp-action="CreateRoute" method="post">
 
-                @* Preserve the event ID when the form is submitted. *@
+                <!-- Preserve event ID -->
                 <input type="hidden" asp-for="EventId" />
 
-                @* Display validation and API errors. *@
+                <!-- Validation -->
                 <div asp-validation-summary="ModelOnly"
-                     class="text-danger mb-3"></div>
+                     class="text-danger mb-4"></div>
 
-                <div class="mb-3">
-                    <label asp-for="RouteName" class="form-label">
-                        Route Name
-                    </label>
-                    <input asp-for="RouteName" class="form-control"
-                           placeholder="e.g. Community 5K Route" />
-                    <span asp-validation-for="RouteName"
-                          class="text-danger"></span>
+                <!-- Route identity -->
+                <div class="profile-section-divider mb-4">
+                    <i class="bi bi-signpost-2-fill"></i>
+                    ROUTE IDENTITY
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="AreasCovered" class="form-label">
-                        Areas Covered
-                    </label>
-                    <input asp-for="AreasCovered" class="form-control"
-                           placeholder="e.g. Central Johannesburg" />
-                    <span asp-validation-for="AreasCovered"
-                          class="text-danger"></span>
+                <div class="row g-4 mb-4">
+
+                    <div class="col-md-6">
+
+                        <label asp-for="RouteName" class="form-label fw-semibold">
+                            Route Name
+                        </label>
+
+                        <input asp-for="RouteName"
+                               class="form-control"
+                               placeholder="e.g. Community 5K Route" />
+
+                        <span asp-validation-for="RouteName"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="AreasCovered" class="form-label fw-semibold">
+                            Areas Covered
+                        </label>
+
+                        <input asp-for="AreasCovered"
+                               class="form-control"
+                               placeholder="e.g. Central Johannesburg" />
+
+                        <span asp-validation-for="AreasCovered"
+                              class="text-danger"></span>
+
+                    </div>
+
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="DistanceKm" class="form-label">
-                        Distance (km)
-                    </label>
-                    <input asp-for="DistanceKm" class="form-control"
-                           type="number" step="0.01" min="0.01" />
-                    <span asp-validation-for="DistanceKm"
-                          class="text-danger"></span>
+                <!-- Distance and locations -->
+                <div class="profile-section-divider mb-4">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    DISTANCE & LOCATIONS
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="StartLocation" class="form-label">
-                        Start Location
-                    </label>
-                    <input asp-for="StartLocation" class="form-control" />
-                    <span asp-validation-for="StartLocation"
-                          class="text-danger"></span>
+                <div class="row g-4 mb-4">
+
+                    <div class="col-md-4">
+
+                        <label asp-for="DistanceKm" class="form-label fw-semibold">
+                            Distance
+                        </label>
+
+                        <div class="input-group">
+
+                            <input asp-for="DistanceKm"
+                                   class="form-control"
+                                   type="number"
+                                   step="0.01"
+                                   min="0.01"
+                                   placeholder="5.00" />
+
+                            <span class="input-group-text">KM</span>
+
+                        </div>
+
+                        <span asp-validation-for="DistanceKm"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <label asp-for="StartLocation" class="form-label fw-semibold">
+                            Start Location
+                        </label>
+
+                        <input asp-for="StartLocation"
+                               class="form-control"
+                               placeholder="Race starting point" />
+
+                        <span asp-validation-for="StartLocation"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-md-4">
+
+                        <label asp-for="FinishLocation" class="form-label fw-semibold">
+                            Finish Location
+                        </label>
+
+                        <input asp-for="FinishLocation"
+                               class="form-control"
+                               placeholder="Race finishing point" />
+
+                        <span asp-validation-for="FinishLocation"
+                              class="text-danger"></span>
+
+                    </div>
+
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="FinishLocation" class="form-label">
-                        Finish Location
-                    </label>
-                    <input asp-for="FinishLocation" class="form-control" />
-                    <span asp-validation-for="FinishLocation"
-                          class="text-danger"></span>
+                <!-- Additional information -->
+                <div class="profile-section-divider mb-4">
+                    <i class="bi bi-info-circle-fill"></i>
+                    ADDITIONAL INFORMATION
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="Description" class="form-label">
-                        Description (optional)
+                <div class="mb-4">
+
+                    <label asp-for="Description" class="form-label fw-semibold">
+                        Route Description
+                        <span class="text-muted fw-normal">(Optional)</span>
                     </label>
-                    <textarea asp-for="Description" class="form-control"
-                              rows="3"></textarea>
+
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Describe the course, terrain or notable landmarks..."></textarea>
+
                     <span asp-validation-for="Description"
                           class="text-danger"></span>
+
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="MapUrl" class="form-label">
-                        Route Map URL (optional)
+                <div class="mb-4">
+
+                    <label asp-for="MapUrl" class="form-label fw-semibold">
+                        Route Map URL
+                        <span class="text-muted fw-normal">(Optional)</span>
                     </label>
-                    <input asp-for="MapUrl" class="form-control"
+
+                    <input asp-for="MapUrl"
+                           class="form-control"
+                           type="url"
                            placeholder="https://..." />
+
                     <span asp-validation-for="MapUrl"
                           class="text-danger"></span>
+
+                    <small class="text-muted d-block mt-2">
+                        Add a link to an online map showing the route.
+                    </small>
+
                 </div>
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">
+                <!-- Form actions -->
+                <div class="d-flex flex-wrap gap-3 mt-5">
+
+                    <button type="submit" class="btn btn-raceday">
+                        <i class="bi bi-plus-circle me-1"></i>
                         Add Route
                     </button>
 
                     <a asp-action="ManageEvent"
                        asp-route-id="@Model.EventId"
-                       class="btn btn-outline-secondary">
+                       class="btn btn-raceday-outline">
+
+                        <i class="bi bi-arrow-left me-1"></i>
                         Cancel
+
                     </a>
+
                 </div>
 
             </form>
 
         </div>
+
     </div>
 
 </div>
