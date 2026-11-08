@@ -284,3 +284,126 @@ a {
         .footer a:hover {
             color: #FFFFFF;
         }
+
+
+
+
+/* =========================================
+   ORGANISER DASHBOARD
+   ========================================= */
+
+.dashboard-hero {
+    background: linear-gradient(135deg, #191F2A, #242D3A);
+    border: 1px solid var(--raceday-border);
+    border-left: 5px solid var(--raceday-orange);
+    border-radius: 16px;
+}
+
+    .dashboard-hero h1 {
+        color: #FFFFFF;
+    }
+
+    .dashboard-hero .lead {
+        color: var(--raceday-muted);
+        max-width: 700px;
+    }
+
+.dashboard-eyebrow {
+    color: var(--raceday-orange);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+
+
+/* =========================================
+   ORGANISER EVENT CARDS
+   ========================================= */
+
+.event-dashboard-card {
+    background: var(--raceday-surface);
+    border: 1px solid var(--raceday-border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+    .event-dashboard-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--raceday-orange);
+    }
+
+.event-card-accent {
+    height: 4px;
+    background: var(--raceday-orange);
+}
+
+.event-type-badge {
+    background: rgba(255, 122, 26, 0.14);
+    color: var(--raceday-orange);
+    padding: 0.4rem 0.75rem;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.event-distance {
+    color: var(--raceday-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.event-dashboard-card .card-title {
+    color: #FFFFFF;
+}
+
+.event-description {
+    min-height: 48px;
+}
+
+.event-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+}
+
+.event-detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+}
+
+.event-detail-icon {
+    font-size: 1.2rem;
+}
+
+.event-detail-row div {
+    display: flex;
+    flex-direction: column;
+}
+
+.event-detail-row small {
+    color: var(--raceday-orange);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 0.2rem;
+}
+
+.event-detail-row strong {
+    color: #FFFFFF;
+    font-size: 0.9rem;
+}
+
+.event-detail-row span:not(.event-detail-icon) {
+    color: var(--raceday-muted);
+    font-size: 0.85rem;
+}
+
+.event-card-actions {
+    border-top: 1px solid var(--raceday-border);
+    background: rgba(0, 0, 0, 0.12);
+}

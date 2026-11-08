@@ -1,5 +1,4 @@
-﻿
-@model List<RaceDay_MVC_Part3.Models.EventViewModel>
+﻿@model List<RaceDay_MVC_Part3.Models.EventViewModel>
 
 @{
     // Set the title displayed by the shared page layout.
@@ -7,13 +6,32 @@
 }
 
 <div class="container py-5">
-    <div class="mb-4">
-        <span class="badge text-bg-primary mb-2">ORGANISER PORTAL</span>
-        <h1 class="display-5 fw-bold">Your RaceDay Dashboard</h1>
-        <p class="lead text-muted">
-            Manage your events, categories, participants and race results
-            from one place.
-        </p>
+
+    <div class="dashboard-hero mb-5 p-4 p-md-5">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="dashboard-eyebrow">
+                    ORGANISER PORTAL
+                </span>
+
+                <h1 class="display-5 fw-bold mt-3 mb-2">
+                    Your RaceDay Dashboard
+                </h1>
+
+                <p class="lead mb-0">
+                    Welcome back, @(Context.Session.GetString("FirstName") ?? "Organiser").
+                    Your events, participants and race results are all in one place.
+                </p>
+            </div>
+
+            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                <a asp-controller="Organiser"
+                   asp-action="CreateEvent"
+                   class="btn btn-raceday btn-lg">
+                    <span class="me-2">+</span> Create New Event
+                </a>
+            </div>
+        </div>
     </div>
 
     @* Welcome the organiser using the first name stored at login. *@
@@ -24,9 +42,13 @@
 
     @* Display the events retrieved from the Part 2 API. *@
     <section class="mb-5" aria-labelledby="myEventsHeading">
+
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
             <div>
-                <h2 id="myEventsHeading" class="h3 fw-bold mb-1">My Events</h2>
+                <h2 id="myEventsHeading" class="h3 fw-bold mb-1">
+                    My Events
+                </h2>
+
                 <p class="text-muted mb-0">
                     View the events associated with your organiser account.
                 </p>
@@ -46,6 +68,7 @@
             <div class="card shadow-sm">
                 <div class="card-body py-5 text-center">
                     <h3 class="h5">No events yet</h3>
+
                     <p class="text-muted mb-0">
                         Events you create will appear here.
                     </p>
@@ -56,47 +79,72 @@
         {
             @* Show each event returned by the API as a Bootstrap card. *@
             <div class="row g-4">
+
                 @foreach (var raceEvent in Model)
                 {
                     <div class="col-12 col-md-6 col-xl-4">
-                        <article class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-                                    <span class="badge text-bg-primary">
+
+                        <article class="card event-dashboard-card h-100">
+
+                            <div class="event-card-accent"></div>
+
+                            <div class="card-body p-4">
+
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="event-type-badge">
                                         @raceEvent.EventType
                                     </span>
 
-                                    <span class="text-muted small">
-                                        @raceEvent.DistanceKm.ToString("0.##") km
+                                    <span class="event-distance">
+                                        @raceEvent.DistanceKm.ToString("0.##") KM
                                     </span>
                                 </div>
 
-                                <h3 class="h5 card-title fw-bold">
+                                <h3 class="h4 card-title fw-bold mb-2">
                                     @raceEvent.Name
                                 </h3>
 
-                                <p class="card-text text-muted">
+                                <p class="text-muted event-description">
                                     @raceEvent.Description
                                 </p>
 
-                                <hr />
+                                <div class="event-details mt-4">
 
-                                <p class="mb-2">
-                                    <strong>Date:</strong>
-                                    @raceEvent.EventDate.ToString("dd MMM yyyy")
-                                </p>
+                                    <div class="event-detail-row">
+                                        <span class="event-detail-icon">📅</span>
 
-                                <p class="mb-0">
-                                    <strong>Location:</strong><br />
-                                    @raceEvent.Venue<br />
-                                    @raceEvent.City, @raceEvent.Province
-                                </p>
+                                        <div>
+                                            <small>EVENT DATE</small>
+
+                                            <strong>
+                                                @raceEvent.EventDate.ToString("dd MMMM yyyy")
+                                            </strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="event-detail-row">
+                                        <span class="event-detail-icon">📍</span>
+
+                                        <div>
+                                            <small>LOCATION</small>
+
+                                            <strong>@raceEvent.Venue</strong>
+
+                                            <span>
+                                                @raceEvent.City, @raceEvent.Province
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
                             </div>
 
-                            <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                            <div class="event-card-actions p-3">
+
                                 <div class="d-flex flex-wrap gap-2">
 
-                                    @* Open the edit form for this specific event. *@
+                                    @* Edit the selected event. *@
                                     <a asp-controller="Organiser"
                                        asp-action="EditEvent"
                                        asp-route-id="@raceEvent.EventId"
@@ -104,70 +152,59 @@
                                         Edit Event
                                     </a>
 
-                                    @* Open route and category management for this event. *@
+                                    @* Manage routes and categories. *@
                                     <a asp-controller="Organiser"
                                        asp-action="ManageEvent"
                                        asp-route-id="@raceEvent.EventId"
                                        class="btn btn-outline-success btn-sm">
-                                        Manage Routes & Categories
+                                        Routes &amp; Categories
                                     </a>
 
+                                    @* View event participants and enrolments. *@
                                     <a asp-controller="Organiser"
                                        asp-action="ViewEnrolments"
                                        asp-route-id="@raceEvent.EventId"
                                        class="btn btn-outline-info btn-sm">
-                                        Manage Participants
+                                        Participants
                                     </a>
 
+                                    @* Manage event results. *@
                                     <a asp-controller="Organiser"
                                        asp-action="ManageResults"
                                        asp-route-id="@raceEvent.EventId"
                                        class="btn btn-outline-warning btn-sm">
-                                        Manage Results
+                                        Results
                                     </a>
 
-
-
-                                    @* Submit a secure POST request to delete this event. *@
-                                    <form asp-controller="Organiser"
-                                          asp-action="DeleteEvent"
-                                          asp-route-id="@raceEvent.EventId"
-                                          method="post"
-                                          class="d-inline"
-                                          onsubmit="return confirm('Are you sure you want to delete this event? This action cannot be undone.');">
-
-                                        @Html.AntiForgeryToken()
-
-                                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                                            Delete Event
-                                        </button>
-                                    </form>
-
                                 </div>
+
+                                @* Submit a secure POST request to delete this event. *@
+                                <form asp-controller="Organiser"
+                                      asp-action="DeleteEvent"
+                                      asp-route-id="@raceEvent.EventId"
+                                      method="post"
+                                      class="mt-3"
+                                      onsubmit="return confirm('Are you sure you want to delete this event? This action cannot be undone.');">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="btn btn-outline-danger btn-sm w-100">
+                                        Delete Event
+                                    </button>
+
+                                </form>
+
                             </div>
+
                         </article>
+
                     </div>
                 }
+
             </div>
         }
+
     </section>
 
-   
-
-        <div class="col-12 col-md-6">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h2 class="h5 card-title">Participants and Results</h2>
-                    <p class="card-text">
-                        Review enrolments and record race finishing results.
-                    </p>
-                    <button type="button"
-                            class="btn btn-outline-primary"
-                            disabled>
-                        View race entries — coming soon
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
