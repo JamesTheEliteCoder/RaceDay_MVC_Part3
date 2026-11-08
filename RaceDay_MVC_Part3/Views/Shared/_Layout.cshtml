@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - RaceDay_MVC_Part3</title>
+    <title>@ViewData["Title"] - RaceDay</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -11,12 +11,12 @@
 </head>
 <body>
     <header>
-
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark raceday-navbar shadow-sm mb-4">
             <div class="container-fluid">
-                @* Keep the RaceDay brand linked to the application's entry point. *@
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                    RaceDay
+
+                <a class="navbar-brand fw-bold fs-3" asp-controller="Home" asp-action="Index">
+                    <span class="brand-race">RACE</span><span class="brand-day">DAY</span>
+                    <span class="brand-tagline">RUN YOUR RACE</span>
                 </a>
 
                 <button class="navbar-toggler"
@@ -29,11 +29,9 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"
-                     id="raceDayNavbar">
+                <div class="navbar-collapse collapse" id="raceDayNavbar">
 
                     <ul class="navbar-nav flex-grow-1">
-                        @* Display navigation links appropriate to the user's role. *@
                         @if (Context.Session.GetInt32("UserId") is not null)
                         {
                             var role = Context.Session.GetString("Role");
@@ -41,50 +39,51 @@
                             if (role == "Organiser")
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark"
+                                    <a class="nav-link"
                                        asp-controller="Organiser"
                                        asp-action="Dashboard">
                                         Dashboard
                                     </a>
                                 </li>
                             }
-                          else if (role == "Participant")
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark"
-           asp-controller="Participant"
-           asp-action="Index">
-            My RaceDay
-        </a>
-    </li>
+                            else if (role == "Participant")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       asp-controller="Participant"
+                                       asp-action="Index">
+                                        My RaceDay
+                                    </a>
+                                </li>
 
-    <li class="nav-item">
-        <a class="nav-link text-dark"
-           asp-controller="Profile"
-           asp-action="Index">
-            My Profile
-        </a>
-    </li>
-}
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       asp-controller="Profile"
+                                       asp-action="Index">
+                                        My Profile
+                                    </a>
+                                </li>
+                            }
                         }
                     </ul>
 
-                    <ul class="navbar-nav">
-                        @* Show login when signed out and a POST logout form when signed in. *@
+                    <ul class="navbar-nav align-items-lg-center">
                         @if (Context.Session.GetInt32("UserId") is not null)
                         {
-                            <li class="nav-item d-flex align-items-center me-sm-3">
+                            <li class="nav-item me-lg-3">
                                 <span class="navbar-text">
                                     Hi, @(Context.Session.GetString("FirstName") ?? "Racer")
                                 </span>
                             </li>
+
                             <li class="nav-item">
                                 <form asp-controller="Account"
                                       asp-action="Logout"
                                       method="post"
                                       class="d-inline">
                                     @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-outline-danger btn-sm mt-1">
+
+                                    <button type="submit" class="btn btn-raceday-outline btn-sm">
                                         Sign out
                                     </button>
                                 </form>
@@ -93,7 +92,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark"
+                                <a class="nav-link"
                                    asp-controller="Account"
                                    asp-action="Login">
                                     Sign in
@@ -101,11 +100,12 @@
                             </li>
                         }
                     </ul>
+
                 </div>
             </div>
         </nav>
-
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -114,9 +114,11 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2026 - RaceDay_MVC_Part3 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - RaceDay -
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

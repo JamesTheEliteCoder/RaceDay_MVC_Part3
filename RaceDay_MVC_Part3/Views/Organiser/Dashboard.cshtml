@@ -112,6 +112,22 @@
                                         Manage Routes & Categories
                                     </a>
 
+                                    <a asp-controller="Organiser"
+                                       asp-action="ViewEnrolments"
+                                       asp-route-id="@raceEvent.EventId"
+                                       class="btn btn-outline-info btn-sm">
+                                        Manage Participants
+                                    </a>
+
+                                    <a asp-controller="Organiser"
+                                       asp-action="ManageResults"
+                                       asp-route-id="@raceEvent.EventId"
+                                       class="btn btn-outline-warning btn-sm">
+                                        Manage Results
+                                    </a>
+
+
+
                                     @* Submit a secure POST request to delete this event. *@
                                     <form asp-controller="Organiser"
                                           asp-action="DeleteEvent"
@@ -136,23 +152,7 @@
         }
     </section>
 
-    @* Keep the other dashboard areas as placeholders for future milestones. *@
-    <div class="row g-4">
-        <div class="col-12 col-md-6">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h2 class="h5 card-title">Categories and Routes</h2>
-                    <p class="card-text">
-                        Organise race categories and configure event routes.
-                    </p>
-                    <button type="button"
-                            class="btn btn-outline-primary mt-2"
-                            disabled>
-                        Manage categories — coming soon
-                    </button>
-                </div>
-            </div>
-        </div>
+   
 
         <div class="col-12 col-md-6">
             <div class="card h-100 shadow-sm">

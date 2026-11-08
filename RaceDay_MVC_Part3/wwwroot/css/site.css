@@ -1,31 +1,286 @@
+/* =========================================
+   RACEDAY - SPORT PERFORMANCE DESIGN SYSTEM
+   Dark surfaces, bold typography, orange energy
+   ========================================= */
+
+:root {
+    color-scheme: dark;
+    --raceday-navy: #090D14;
+    --raceday-navy-light: #191F2A;
+    --raceday-orange: #FF7A1A;
+    --raceday-orange-hover: #E9670B;
+    --raceday-background: #090D14;
+    --raceday-surface: #191F2A;
+    --raceday-surface-raised: #242D3A;
+    --raceday-text: #FFFFFF;
+    --raceday-muted: #A1AAB8;
+    --raceday-border: #303A48;
+    --raceday-success: #36C98F;
+    --raceday-danger: #F05252;
+}
+
+/* =========================================
+   GLOBAL STRUCTURE
+   ========================================= */
+
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: var(--raceday-background);
+    color: var(--raceday-text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    line-height: 1.6;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* =========================================
+   NAVIGATION
+   ========================================= */
+
+.raceday-navbar {
+    background-color: #070A10;
+    padding: 0.9rem 1.5rem;
+    border-bottom: 1px solid var(--raceday-border);
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    .raceday-navbar .navbar-brand {
+        color: #FFFFFF;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: baseline;
+        gap: 0.15rem;
+        flex-wrap: wrap;
+    }
+
+.brand-race {
+    color: #FFFFFF;
 }
+
+.brand-day {
+    color: var(--raceday-orange);
+}
+
+.brand-tagline {
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    color: var(--raceday-muted);
+    margin-left: 0.5rem;
+}
+
+.raceday-navbar .nav-link {
+    color: #D5DAE2;
+    font-weight: 600;
+    padding: 0.65rem 1rem;
+    transition: color 0.2s ease;
+}
+
+    .raceday-navbar .nav-link:hover,
+    .raceday-navbar .nav-link:focus {
+        color: var(--raceday-orange);
+    }
+
+.raceday-navbar .navbar-text {
+    color: #FFFFFF;
+}
+
+.raceday-navbar .navbar-toggler {
+    border-color: var(--raceday-border);
+}
+
+/* =========================================
+   BUTTONS
+   ========================================= */
+
+.btn-raceday {
+    background-color: var(--raceday-orange);
+    border-color: var(--raceday-orange);
+    color: #111111;
+    font-weight: 700;
+    border-radius: 7px;
+    padding: 0.65rem 1.2rem;
+    transition: all 0.2s ease;
+}
+
+    .btn-raceday:hover {
+        background-color: var(--raceday-orange-hover);
+        border-color: var(--raceday-orange-hover);
+        color: #FFFFFF;
+    }
+
+.btn-raceday-outline {
+    background-color: transparent;
+    border: 1px solid var(--raceday-orange);
+    color: var(--raceday-orange);
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+    .btn-raceday-outline:hover {
+        background-color: var(--raceday-orange);
+        color: #111111;
+    }
+
+/* =========================================
+   CARDS AND SURFACES
+   ========================================= */
+
+.card {
+    background-color: var(--raceday-surface);
+    color: var(--raceday-text);
+    border: 1px solid var(--raceday-border);
+    border-radius: 12px;
+}
+
+    .card.shadow-sm {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+    }
+
+.card-title {
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+.card-text {
+    color: var(--raceday-muted);
+}
+
+/* =========================================
+   HEADINGS AND TEXT
+   ========================================= */
+
+h1, h2, h3, h4, h5, h6 {
+    color: #FFFFFF;
+    font-weight: 700;
+}
+
+p {
+    color: var(--raceday-muted);
+}
+
+.text-muted {
+    color: var(--raceday-muted) !important;
+}
+
+/* =========================================
+   FORMS
+   ========================================= */
+
+.form-control,
+.form-select {
+    background-color: var(--raceday-surface-raised);
+    color: #FFFFFF;
+    border: 1px solid var(--raceday-border);
+    border-radius: 7px;
+    padding: 0.65rem 0.85rem;
+}
+
+    .form-control::placeholder {
+        color: #8993A3;
+    }
+
+    .form-control:focus,
+    .form-select:focus,
+    .form-check-input:focus {
+        background-color: var(--raceday-surface-raised);
+        color: #FFFFFF;
+        border-color: var(--raceday-orange);
+        box-shadow: 0 0 0 0.2rem rgba(255, 122, 26, 0.2);
+    }
+
+
+/* Read-only profile information */
+.form-control-plaintext {
+    color: var(--raceday-text) !important;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.4rem 0;
+}
+
+
+    .form-select option {
+        background-color: var(--raceday-surface);
+        color: #FFFFFF;
+    }
+
+.form-label {
+    color: #E2E8F0;
+    font-weight: 600;
+}
+
+/* =========================================
+   TABLES
+   ========================================= */
+
+.table {
+    color: #FFFFFF;
+    --bs-table-color: #FFFFFF;
+    --bs-table-bg: transparent;
+    --bs-table-border-color: var(--raceday-border);
+}
+
+    .table thead th {
+        color: var(--raceday-orange);
+        border-bottom-color: var(--raceday-border);
+    }
+
+    .table tbody td {
+        color: #D5DAE2;
+    }
+
+/* =========================================
+   GENERAL INTERACTION
+   ========================================= */
+
+a {
+    color: var(--raceday-orange);
+    transition: color 0.2s ease;
+}
+
+    a:hover {
+        color: #FFA45E;
+    }
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus {
+    box-shadow: 0 0 0 0.1rem #FFFFFF, 0 0 0 0.25rem var(--raceday-orange);
+}
+
+/* =========================================
+   ALERTS
+   ========================================= */
+
+.alert {
+    border-radius: 8px;
+    border: 1px solid var(--raceday-border);
+}
+
+/* =========================================
+   FOOTER
+   ========================================= */
+
+.footer {
+    background-color: #070A10;
+    color: var(--raceday-muted);
+    padding: 1rem 0;
+    border-top: 1px solid var(--raceday-border);
+}
+
+    .footer a {
+        color: var(--raceday-orange);
+        text-decoration: none;
+    }
+
+        .footer a:hover {
+            color: #FFFFFF;
+        }
