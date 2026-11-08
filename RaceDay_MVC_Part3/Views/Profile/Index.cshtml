@@ -1,4 +1,5 @@
-﻿@model RaceDay_MVC_Part3.Models.ProfileViewModel
+﻿
+@model RaceDay_MVC_Part3.Models.ProfileViewModel
 
 @{
     ViewData["Title"] = "My Profile";
@@ -6,137 +7,199 @@
 
 <div class="container py-5">
 
-
-
     @if (TempData["SuccessMessage"] is string successMessage)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-success alert-dismissible fade show"
+             role="alert">
             @successMessage
-            <button type="button" class="btn-close" data-bs-dismiss="alert"
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
                     aria-label="Close"></button>
         </div>
     }
 
+    <!-- Profile page heading -->
+    <div class="dashboard-hero p-4 p-md-5 mb-4">
+        <span class="dashboard-eyebrow">PARTICIPANT PORTAL</span>
 
-    <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-        <div>
-            <h1 class="fw-bold">My Profile</h1>
-            <p class="text-muted">
-                View and manage your personal information.
-            </p>
+        <h1 class="display-5 fw-bold mt-2">My Profile</h1>
+
+        <p class="lead mb-0">
+            Manage your personal information and account details.
+        </p>
+    </div>
+
+    <!-- Profile picture section -->
+    <div class="event-dashboard-card mb-4">
+        <div class="event-card-accent"></div>
+
+        <div class="card-body p-4 p-md-5">
+
+            <div class="row align-items-center g-4">
+
+                <div class="col-md-4 text-center">
+
+                    @if (!string.IsNullOrWhiteSpace(Model.ProfilePictureUrl))
+                    {
+                        <img src="@Url.Action("ProfilePicture", "Images")"
+                             alt="Profile Picture"
+                             class="profile-avatar shadow" />
+                    }
+                    else
+                    {
+                        <div class="profile-avatar profile-avatar-placeholder">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                    }
+
+                    <div class="mt-3">
+                        <span class="event-type-badge">RACEDAY MEMBER</span>
+                    </div>
+
+                </div>
+
+                <div class="col-md-8">
+
+                    <span class="dashboard-eyebrow">YOUR PROFILE</span>
+
+                    <h3 class="fw-bold mt-2">
+                        @Model.FirstName @Model.LastName
+                    </h3>
+
+                    <p class="text-muted mb-3">
+                        Keep your profile picture up to date so your account
+                        is easy to recognise.
+                    </p>
+
+                    <form asp-controller="Profile"
+                          asp-action="UploadProfilePicture"
+                          method="post"
+                          enctype="multipart/form-data">
+
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label for="ProfilePicture"
+                                   class="form-label fw-semibold">
+                                Choose a new profile picture
+                            </label>
+
+                            <input type="file"
+                                   id="ProfilePicture"
+                                   name="ProfilePicture"
+                                   class="form-control"
+                                   accept=".jpg,.jpeg,.png,.webp"
+                                   required />
+                        </div>
+
+                        <button type="submit" class="btn btn-raceday">
+                            <i class="bi bi-cloud-arrow-up me-1"></i>
+                            Upload Picture
+                        </button>
+
+                    </form>
+
+                    <small class="text-muted d-block mt-2">
+                        Accepted formats: JPG, JPEG, PNG and WebP.
+                    </small>
+
+                </div>
+
+            </div>
+
         </div>
+    </div>
 
-        <a asp-controller="Profile"
-           asp-action="Edit"
-           class="btn btn-primary">
-            <i class="bi bi-pencil-square me-1"></i>
-            Edit Profile
+    <!-- Personal information section -->
+    <div class="event-dashboard-card">
+
+        <div class="event-card-accent"></div>
+
+        <div class="card-body p-4 p-md-5">
+
+            <div class="d-flex justify-content-between
+                        align-items-center flex-wrap gap-3 mb-4">
+
+                <div>
+                    <span class="dashboard-eyebrow">ACCOUNT DETAILS</span>
+                    <h3 class="fw-bold mt-2 mb-1">
+                        Personal Information
+                    </h3>
+                    <p class="text-muted mb-0">
+                        Your registered account information.
+                    </p>
+                </div>
+
+                <a asp-controller="Profile"
+                   asp-action="Edit"
+                   class="btn btn-raceday">
+                    <i class="bi bi-pencil-square me-1"></i>
+                    Edit Profile
+                </a>
+
+            </div>
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">FIRST NAME</span>
+                        <strong>@Model.FirstName</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">LAST NAME</span>
+                        <strong>@Model.LastName</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">EMAIL ADDRESS</span>
+                        <strong>@Model.Email</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">PHONE NUMBER</span>
+                        <strong>@Model.PhoneNumber</strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">DATE OF BIRTH</span>
+                        <strong>
+                            @Model.DateOfBirth.ToString("dd MMMM yyyy")
+                        </strong>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="profile-info-item">
+                        <span class="profile-info-label">ACCOUNT TYPE</span>
+                        <span class="profile-role-badge">
+                            @Model.Role
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-controller="Participant"
+           asp-action="Dashboard"
+           class="btn btn-raceday-outline">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Dashboard
         </a>
-    </div>
-
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-4">
-
-            <div class="text-center mb-4">
-    @if (!string.IsNullOrWhiteSpace(Model.ProfilePictureUrl))
-    {
-        <img src="@Url.Action("ProfilePicture", "Images")"
-             alt="Profile Picture"
-             class="rounded-circle shadow-sm"
-             style="width: 150px; height: 150px; object-fit: cover;" />
-    }
-    else
-    {
-        <div class="rounded-circle bg-light border d-inline-flex
-                    align-items-center justify-content-center"
-             style="width: 150px; height: 150px;">
-            <i class="bi bi-person-fill text-secondary"
-               style="font-size: 4rem;"></i>
-        </div>
-    }
-</div>
-
-
-<form asp-controller="Profile"
-      asp-action="UploadProfilePicture"
-      method="post"
-      enctype="multipart/form-data"
-      class="text-center mb-4">
-
-    @Html.AntiForgeryToken()
-
-    <div class="mb-3">
-        <label for="ProfilePicture" class="form-label fw-semibold">
-            Change Profile Picture
-        </label>
-
-        <input type="file"
-               id="ProfilePicture"
-               name="ProfilePicture"
-               class="form-control"
-               accept=".jpg,.jpeg,.png,.webp"
-               required />
-    </div>
-
-    <button type="submit" class="btn btn-outline-primary">
-        <i class="bi bi-cloud-arrow-up me-1"></i>
-        Upload Picture
-    </button>
-</form>
-            <div class="mb-4">
-                <h4 class="fw-bold">Personal Information</h4>
-                <p class="text-muted">
-                    Your registered account details.
-                </p>
-            </div>
-
-            <div class="row g-3">
-
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">First Name</label>
-                    <p class="form-control-plaintext">
-                        @Model.FirstName
-                    </p>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Last Name</label>
-                    <p class="form-control-plaintext">
-                        @Model.LastName
-                    </p>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Email Address</label>
-                    <p class="form-control-plaintext">
-                        @Model.Email
-                    </p>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Phone Number</label>
-                    <p class="form-control-plaintext">
-                        @Model.PhoneNumber
-                    </p>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Date of Birth</label>
-                    <p class="form-control-plaintext">
-                        @Model.DateOfBirth.ToString("dd MMMM yyyy")
-                    </p>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Account Type</label>
-                    <p class="form-control-plaintext">
-                        @Model.Role
-                    </p>
-                </div>
-
-            </div>
-
-        </div>
     </div>
 
 </div>

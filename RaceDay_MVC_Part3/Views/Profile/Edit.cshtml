@@ -1,4 +1,5 @@
-﻿@model RaceDay_MVC_Part3.Models.EditProfileViewModel
+﻿
+@model RaceDay_MVC_Part3.Models.EditProfileViewModel
 
 @{
     ViewData["Title"] = "Edit Profile";
@@ -6,15 +7,26 @@
 
 <div class="container py-5">
 
-    <div class="mb-4">
-        <h1 class="fw-bold">Edit My Profile</h1>
-        <p class="text-muted">
-            Keep your personal information up to date.
+    <div class="dashboard-hero p-4 p-md-5 mb-4">
+        <span class="dashboard-eyebrow">PARTICIPANT PORTAL</span>
+        <h1 class="display-5 fw-bold mt-2">Edit My Profile</h1>
+        <p class="lead mb-0">
+            Keep your personal information accurate and up to date.
         </p>
     </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-4">
+    <div class="event-dashboard-card">
+        <div class="event-card-accent"></div>
+
+        <div class="card-body p-4 p-md-5">
+
+            <div class="mb-4">
+                <span class="event-type-badge">PERSONAL DETAILS</span>
+                <h4 class="fw-bold mt-3">Account Information</h4>
+                <p class="text-muted">
+                    Update the details associated with your RaceDay account.
+                </p>
+            </div>
 
             <form asp-controller="Profile"
                   asp-action="Edit"
@@ -24,31 +36,38 @@
                      class="alert alert-danger"
                      role="alert"></div>
 
-                <div class="row g-3">
+                <div class="row g-4">
 
                     <div class="col-md-6">
-                        <label asp-for="FirstName" class="form-label fw-semibold"></label>
-                        <input asp-for="FirstName" class="form-control" />
+                        <label asp-for="FirstName"
+                               class="form-label fw-semibold"></label>
+                        <input asp-for="FirstName"
+                               class="form-control" />
                         <span asp-validation-for="FirstName"
                               class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label asp-for="LastName" class="form-label fw-semibold"></label>
-                        <input asp-for="LastName" class="form-control" />
+                        <label asp-for="LastName"
+                               class="form-label fw-semibold"></label>
+                        <input asp-for="LastName"
+                               class="form-control" />
                         <span asp-validation-for="LastName"
                               class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label asp-for="PhoneNumber" class="form-label fw-semibold"></label>
-                        <input asp-for="PhoneNumber" class="form-control" />
+                        <label asp-for="PhoneNumber"
+                               class="form-label fw-semibold"></label>
+                        <input asp-for="PhoneNumber"
+                               class="form-control" />
                         <span asp-validation-for="PhoneNumber"
                               class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label asp-for="DateOfBirth" class="form-label fw-semibold"></label>
+                        <label asp-for="DateOfBirth"
+                               class="form-label fw-semibold"></label>
                         <input asp-for="DateOfBirth"
                                type="date"
                                class="form-control" />
@@ -58,16 +77,17 @@
 
                 </div>
 
-                <div class="mt-4 d-flex gap-2">
+                <div class="d-flex flex-wrap gap-3 mt-5">
 
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-raceday">
                         <i class="bi bi-save me-1"></i>
                         Save Changes
                     </button>
 
                     <a asp-controller="Profile"
                        asp-action="Index"
-                       class="btn btn-outline-secondary">
+                       class="btn btn-raceday-outline">
+                        <i class="bi bi-arrow-left me-1"></i>
                         Cancel
                     </a>
 
