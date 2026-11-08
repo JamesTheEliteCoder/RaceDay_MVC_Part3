@@ -1,123 +1,237 @@
-﻿@model RaceDay_MVC_Part3.Models.EventDetailsViewModel
+﻿
+@model RaceDay_MVC_Part3.Models.EventDetailsViewModel
 
 @{
-    // Set the browser page title using the selected event's name.
     ViewData["Title"] = Model.Event.Name;
 }
 
 <div class="container py-5">
 
+    @* Event banner. *@
+    @if (!string.IsNullOrWhiteSpace(Model.Event.BannerImageUrl))
+    {
+        <div class="mb-4">
+            <img src="@Url.Action("EventBanner", "Images",
+                new { eventId = Model.Event.EventId })"
+                 alt="@Model.Event.Name event banner"
+                 class="img-fluid w-100 rounded shadow-sm"
+                 style="max-height: 420px; object-fit: cover;" />
+        </div>
+    }
+    else
+    {
+        <div class="d-flex align-items-center justify-content-center rounded mb-4"
+             style="height: 220px; background-color: var(--raceday-surface-raised);">
 
-    @* Display the event banner retrieved through the MVC image proxy. *@
-@if (!string.IsNullOrWhiteSpace(Model.Event.BannerImageUrl))
-{
-    <div class="mb-4">
-        <img src="@Url.Action("EventBanner", "Images",
-            new { eventId = Model.Event.EventId })"
-             alt="@Model.Event.Name event banner"
-             class="img-fluid w-100 rounded shadow-sm"
-             style="max-height: 420px; object-fit: cover;" />
-    </div>
-}
-else
-{
-    <div class="bg-light rounded d-flex align-items-center justify-content-center mb-4"
-         style="height: 220px;">
-        <span class="text-muted">
-            <i class="bi bi-image me-2"></i>
-            Event banner unavailable
-        </span>
-    </div>
-} 
+            <span class="text-muted">
+                <i class="bi bi-image me-2"></i>
+                Event banner unavailable
+            </span>
 
+        </div>
+    }
 
-    @* Event heading and main information. *@
-    <div class="mb-4">
-        <span class="badge text-bg-success mb-2">
+    @* Event identity and description. *@
+    <div class="dashboard-hero mb-5 p-4 p-md-5">
+
+        <span class="dashboard-eyebrow">
             @Model.Event.EventType
         </span>
 
-        <h1 class="display-5 fw-bold">@Model.Event.Name</h1>
+        <h1 class="display-5 fw-bold mt-3 mb-3">
+            @Model.Event.Name
+        </h1>
 
-        <p class="lead text-muted">
+        <p class="lead mb-0">
             @Model.Event.Description
         </p>
+
     </div>
 
-    @* Present the event's key details in a card. *@
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h2 class="h5 mb-3">Event Information</h2>
+    @* Event information. *@
+    <section class="mb-5">
 
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <strong>Date:</strong>
-                    @Model.Event.EventDate.ToString("dd MMMM yyyy")
-                </div>
+        <h2 class="h3 fw-bold mb-4">
+            Event Information
+        </h2>
 
-                <div class="col-md-6">
-                    <strong>Distance:</strong>
-                    @Model.Event.DistanceKm km
-                </div>
+        <div class="row g-3">
 
-                <div class="col-md-6">
-                    <strong>Venue:</strong>
-                    @Model.Event.Venue
-                </div>
+            <div class="col-12 col-md-6">
+                <div class="card event-dashboard-card h-100">
+                    <div class="card-body p-4">
 
-                <div class="col-md-6">
-                    <strong>Location:</strong>
-                    @Model.Event.City, @Model.Event.Province
+                        <div class="event-detail-row">
+                            <span class="event-detail-icon">📅</span>
+
+                            <div>
+                                <small>EVENT DATE</small>
+
+                                <strong>
+                                    @Model.Event.EventDate.ToString("dd MMMM yyyy")
+                                </strong>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    @* Display the categories participants can enrol in. *@
-    <div class="mb-4">
-        <h2 class="h4 fw-bold mb-3">Available Categories</h2>
+            <div class="col-12 col-md-6">
+                <div class="card event-dashboard-card h-100">
+                    <div class="card-body p-4">
+
+                        <div class="event-detail-row">
+                            <span class="event-detail-icon">🏃</span>
+
+                            <div>
+                                <small>DISTANCE</small>
+
+                                <strong>
+                                    @Model.Event.DistanceKm.ToString("0.##") km
+                                </strong>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="card event-dashboard-card h-100">
+                    <div class="card-body p-4">
+
+                        <div class="event-detail-row">
+                            <span class="event-detail-icon">📍</span>
+
+                            <div>
+                                <small>VENUE</small>
+
+                                <strong>
+                                    @Model.Event.Venue
+                                </strong>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="card event-dashboard-card h-100">
+                    <div class="card-body p-4">
+
+                        <div class="event-detail-row">
+                            <span class="event-detail-icon">🌍</span>
+
+                            <div>
+                                <small>LOCATION</small>
+
+                                <strong>
+                                    @Model.Event.City, @Model.Event.Province
+                                </strong>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    @* Available enrolment categories. *@
+    <section class="mb-5">
+
+        <h2 class="h3 fw-bold mb-2">
+            Available Categories
+        </h2>
+
+        <p class="text-muted mb-4">
+            Choose the category that suits you and secure your place.
+        </p>
 
         @if (Model.Categories == null || !Model.Categories.Any())
         {
-            <div class="alert alert-info">
-                No categories are currently available for this event.
+            <div class="card event-dashboard-card">
+                <div class="card-body py-4">
+
+                    <p class="text-muted mb-0">
+                        No categories are currently available for this event.
+                    </p>
+
+                </div>
             </div>
         }
         else
         {
-            <div class="row g-3">
+            <div class="row g-4">
+
                 @foreach (var category in Model.Categories)
                 {
-                    <div class="col-md-6 col-lg-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <span class="badge text-bg-secondary mb-2">
-                                    @category.CategoryType
-                                </span>
+                    <div class="col-12 col-md-6 col-xl-4">
 
-                                <h3 class="h5">@category.Name</h3>
+                        <article class="card event-dashboard-card h-100">
 
-                                @if (category.CategoryType == "Age")
-                                {
-                                    <p class="text-muted mb-0">
-                                        Age range:
-                                        @(category.MinimumAge?.ToString() ?? "No minimum")
-                                        –
-                                        @(category.MaximumAge?.ToString() ?? "No maximum")
-                                    </p>
-                                }
-                                else
-                                {
-                                    <p class="text-muted mb-0">
-                                        @Model.Event.DistanceKm km event
-                                    </p>
-                                }
+                            <div class="event-card-accent"></div>
 
-                                @* Allow the participant to enrol in this category. *@
+                            <div class="card-body p-4 d-flex flex-column">
+
+                                <div class="mb-3">
+                                    <span class="event-type-badge">
+                                        @category.CategoryType
+                                    </span>
+                                </div>
+
+                                <h3 class="h4 card-title fw-bold mb-3">
+                                    @category.Name
+                                </h3>
+
+                                <div class="flex-grow-1">
+
+                                    @if (category.CategoryType == "Age")
+                                    {
+                                        <div class="event-detail-row">
+
+                                            <span class="event-detail-icon">👥</span>
+
+                                            <div>
+                                                <small>AGE RANGE</small>
+
+                                                <strong>
+                                                    @(category.MinimumAge?.ToString() ?? "No minimum")
+                                                    –
+                                                    @(category.MaximumAge?.ToString() ?? "No maximum")
+                                                </strong>
+                                            </div>
+
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="event-detail-row">
+
+                                            <span class="event-detail-icon">🏁</span>
+
+                                            <div>
+                                                <small>RACE DISTANCE</small>
+
+                                                <strong>
+                                                    @Model.Event.DistanceKm.ToString("0.##") km event
+                                                </strong>
+                                            </div>
+
+                                        </div>
+                                    }
+
+                                </div>
+
+                                @* Secure category enrolment form. *@
                                 <form asp-controller="Participant"
                                       asp-action="Enrol"
                                       method="post"
-                                      class="mt-3">
+                                      class="mt-4">
 
                                     @Html.AntiForgeryToken()
 
@@ -130,23 +244,38 @@ else
                                            value="@category.CategoryId" />
 
                                     <button type="submit"
-                                            class="btn btn-success w-100">
+                                            class="btn btn-raceday w-100">
+
                                         <i class="bi bi-check-circle me-1"></i>
                                         Enrol Now
+
                                     </button>
+
                                 </form>
+
                             </div>
-                        </div>
+
+                        </article>
+
                     </div>
                 }
+
             </div>
         }
-    </div>
 
-    <a asp-controller="Participant"
-       asp-action="BrowseEvents"
-       class="btn btn-outline-secondary">
-        Back to Events
-    </a>
+    </section>
+
+    @* Return to event discovery. *@
+    <div class="mt-4">
+
+        <a asp-controller="Participant"
+           asp-action="BrowseEvents"
+           class="btn btn-raceday-outline">
+
+            &larr; Back to Events
+
+        </a>
+
+    </div>
 
 </div>
