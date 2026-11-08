@@ -294,3 +294,112 @@ The RaceDay MVC application has been containerised using Docker, allowing it to 
 - Used `host.docker.internal` to allow the MVC container to communicate with the Part 2 API running on the host machine.
 
 
+16. Personal Findings and Experiences
+Introduction
+Developing the RaceDay MVC application has been one of the more challenging, but also rewarding, experiences of my programming journey. What initially seemed like a straightforward task of building an MVC application that consumed an existing API turned into a much bigger learning experience involving API integration, authentication, session management, cloud storage, Docker, interface design and troubleshooting.
+
+Throughout the development process, I realised that building an application is about much more than simply writing code that works. It requires planning, patience, problem-solving and, perhaps most importantly, the willingness to go back and correct things when they don't work as expected.
+
+There were times when I felt frustrated, particularly when something that seemed relatively simple took much longer than anticipated. However, each challenge presented an opportunity to understand the technologies better and become more confident in my ability to work through problems independently.
+Planning and Application Architecture
+One of the first important lessons I learned was the value of planning before jumping straight into development.
+
+Having already completed Part 2, I initially thought that building the MVC application would mostly involve creating views and connecting them to the API. However, I quickly realised that I needed to understand the existing API properly before I could build anything around it.
+
+We spent time examining the database structure, understanding the relationships between entities, reviewing the available endpoints and planning how the MVC application would communicate with the API.
+
+This helped me appreciate the importance of separating responsibilities between different application layers. The MVC application was not supposed to communicate directly with the database or recreate the business logic already implemented in the API. Instead, it needed to act as the presentation layer through which users could interact with the existing system.
+
+I also learned that taking the time to plan the file structure and implementation approach made the development process considerably easier. Rather than rushing ahead and creating files without understanding their purpose, I wanted to be involved in the structure and understand why each component was necessary.
+API Integration and Authentication
+Integrating the MVC application with the existing RaceDay API was one of the more important parts of the project.
+
+I learned how to use an API client service to centralise HTTP communication and how to retrieve, submit, update and delete information through API endpoints. This included working with different HTTP methods and handling responses returned by the API.
+
+Authentication was another area that required careful consideration. I needed to ensure that users could register, log in and log out while maintaining their authenticated state as they navigated through the application.
+
+Managing sessions and preserving the API authentication information between requests was particularly important. The application also needed to distinguish between Organisers and Participants, ensuring that each role had access to the appropriate pages and functionality.
+
+One thing I took away from this experience was that authentication is not simply about checking whether someone has logged in. It is also about managing access properly throughout the application and ensuring that users cannot access functionality intended for another role.
+Azure Blob Storage Integration
+Integrating Azure Blob Storage introduced me to another aspect of application development: cloud-based file storage.
+
+The application needed to support event banner uploads and participant profile pictures. Rather than storing image files directly in the database, I implemented Azure Blob Storage through the existing API.
+
+I learned how uploaded files could be validated, stored in a cloud storage container and associated with database records through their corresponding URLs.
+
+Another important consideration was that the storage container was private. This meant that displaying uploaded images required the MVC application to retrieve them through the API rather than relying on publicly accessible image URLs.
+
+Getting this integration working helped me understand how cloud storage can be incorporated into a real application and how different services can work together to provide functionality that would otherwise be difficult to manage locally.
+Docker and Troubleshooting
+Docker was probably one of the most frustrating parts of the development process.
+
+I initially encountered problems with Docker Desktop and its interaction with WSL. What should have been a relatively straightforward process of building and running a container turned into a much longer troubleshooting exercise.
+
+My WSL environment became unresponsive, and I eventually had to investigate the underlying problem, update WSL and enable the necessary Windows Subsystem for Linux feature.
+
+Getting Docker Desktop and its WSL2 environment working again was a relief, but that was not the end of the challenges.
+
+During container testing, I encountered another issue involving recursive client creation that resulted in a StackOverflowException. This was particularly frustrating because the application had already been working, and I now had to investigate why the containerised version was behaving differently.
+
+After correcting the issue, rebuilding the application and testing it again, I was finally able to get the container running successfully.
+
+This experience taught me that an application working on my development machine does not automatically mean it will work in another environment. Configuration, networking, environment variables and dependencies all need to be considered.
+
+More importantly, I learned not to give up when something breaks, even when the problem initially seems bigger than expected.
+UI/UX Design and Refinement
+One of the most enjoyable stages of the project was the visual redesign of the application.
+
+Initially, my main priority was getting the required functionality working. I wanted to make sure that users could register, log in, manage events, enrol in races, view results and update their profiles before spending too much time on the appearance of the application.
+
+Once the functionality had been implemented and tested, I felt that the application needed something more. Although the different features worked, I wanted the overall experience to feel more like an actual race-management platform rather than a collection of ordinary web pages.
+
+I decided on a dark, sport-performance-inspired design with an orange accent colour. The intention was to create something that felt energetic, modern and appropriate for an application centred around running, walking and cycling events.
+
+We then worked through the application page by page, redesigning the organiser and participant interfaces. This included dashboards, event cards, event details, enrolment pages, result management, profile pages and the various forms used to create and manage events, routes and categories.
+
+I particularly enjoyed seeing how the application gradually changed as the new styling was introduced. Features that had previously been presented in fairly basic Bootstrap layouts started to feel much more cohesive and professional.
+
+The process also taught me that good interface design is not simply about choosing attractive colours or adding visual effects. Consistency, spacing, readability, navigation and making important information easy to identify are equally important.
+
+I also learned the importance of preserving existing functionality during visual changes. Every redesigned page needed to retain its original model bindings, validation, form submissions and navigation behaviour.
+
+Seeing the final result was genuinely satisfying because it felt like the application had developed an identity of its own.
+Testing and Quality Assurance
+Testing was an important part of the entire development process, rather than something that was only considered at the end.
+
+After implementing individual features, I tested them to make sure they behaved as expected. This included testing authentication, role-based access, event management, route and category creation, participant enrolments, results management and profile updates.
+
+I also tested the application after the visual redesigns to ensure that changing the appearance had not affected the underlying functionality.
+
+One thing I learned was the importance of testing the complete user journey rather than simply checking whether an individual page loads successfully.
+
+For example, creating an event is only one part of the process. The event must also appear correctly in the relevant dashboards, allow routes and categories to be associated with it, support participant enrolments and eventually allow results to be recorded and viewed.
+
+Working through these scenarios gave me greater confidence in the application and helped me appreciate the importance of testing the interaction between different components.
+Git and Version Control
+Throughout the project, I used GitHub for version control and maintained a history of the development process through regular commits.
+
+I learned the importance of making meaningful commits after completing individual features or significant changes. This made it easier to track progress and provided a way to recover from mistakes when necessary.
+
+There were instances where I made changes to the wrong file or needed to undo an unintended modification. Having Git available made these situations considerably less stressful.
+
+I also implemented a GitHub Actions workflow to automate the build process, which introduced me to the importance of continuous integration and checking that the application can build successfully outside my immediate development environment.
+Lessons Learned and Final Reflection
+Looking back, this project has taught me a great deal about developing an application that brings multiple technologies together.
+
+I have gained practical experience working with ASP.NET Core MVC, REST APIs, authentication, session management, Azure Blob Storage, Docker, GitHub Actions and Bootstrap-based interface design.
+
+However, I think the biggest lesson has been learning how to approach problems.
+
+There were moments when I became frustrated because something wasn't working, or when I thought I had finally completed a task only to discover another issue that needed attention. There were also times when I was tired and had to step back, rethink the approach and continue later.
+
+But I learned that making mistakes is part of the process. Understanding why something went wrong is often just as valuable as successfully implementing the feature in the first place.
+
+I am particularly proud of the fact that I did not simply focus on meeting the minimum functional requirements. I wanted to understand the application, take ownership of the implementation and improve the overall experience wherever possible.
+
+The visual redesign was a good example of this. It would have been easy to leave the original pages as they were once the functionality was complete, but I wanted to take the additional step of making the application feel polished and consistent.
+
+Most importantly, this project has improved my confidence in approaching larger software development tasks. I now have a better understanding of how different components fit together, how to troubleshoot problems and why planning, testing and incremental development matter.
+
+Overall, RaceDay has been much more than an assignment. It has been an opportunity to put what I have learned into practice, work through real development challenges and produce an application that I can genuinely be proud of.
