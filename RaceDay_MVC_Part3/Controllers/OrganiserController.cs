@@ -220,6 +220,74 @@ public class OrganiserController : Controller
     } // End of EditEvent method
 
 
+
+
+
+
+    // Deletes an existing event belonging to the signed-in organiser.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteEvent(int id)
+    {
+        // Ensure the visitor is signed in.
+        var userId = HttpContext.Session.GetInt32("UserId");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        // Only organisers may delete events.
+        var role = HttpContext.Session.GetString("Role");
+
+        if (!string.Equals(role, "Organiser", StringComparison.Ordinal))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        try
+        {
+            // Retrieve only the events belonging to the signed-in organiser.
+            var myEvents = await _apiClient.GetMyEventsAsync(HttpContext.Session);
+
+            // Do not allow an organiser to delete another organiser's event.
+            var raceEvent = myEvents.FirstOrDefault(
+                eventItem => eventItem.EventId == id);
+
+            if (raceEvent is null)
+            {
+                return NotFound();
+            }
+
+            // Request deletion through the RaceDay API.
+            var deleted = await _apiClient.DeleteEventAsync(
+                id,
+                HttpContext.Session);
+
+            if (deleted)
+            {
+                TempData["SuccessMessage"] = "Event deleted successfully.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] =
+                    "The event could not be deleted. It may have existing enrolments or related records.";
+            }
+
+            return RedirectToAction(nameof(Dashboard));
+        }
+        catch (HttpRequestException)
+        {
+            return StatusCode(
+                StatusCodes.Status502BadGateway,
+                "The RaceDay API could not be reached. Please try again later.");
+        }
+    } // End of DeleteEvent method
+
+
+
+
+
     // Validates and submits changes to an existing event.
     [HttpPost]
     [ValidateAntiForgeryToken]

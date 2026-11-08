@@ -94,19 +94,40 @@
                             </div>
 
                             <div class="card-footer bg-transparent border-0 pt-0 pb-3">
-                                @* Open the edit form for this specific event. *@
-                                <a asp-controller="Organiser"
-                                   asp-action="EditEvent"
-                                   asp-route-id="@raceEvent.EventId"
-                                   class="btn btn-outline-primary btn-sm">
-                                    Edit Event
-                                </a>
-                                <a asp-controller="Organiser"
-                                   asp-action="ManageEvent"
-                                   asp-route-id="@raceEvent.EventId"
-                                   class="btn btn-outline-success">
-                                    Manage Routes & Categories
-                                </a>
+                                <div class="d-flex flex-wrap gap-2">
+
+                                    @* Open the edit form for this specific event. *@
+                                    <a asp-controller="Organiser"
+                                       asp-action="EditEvent"
+                                       asp-route-id="@raceEvent.EventId"
+                                       class="btn btn-outline-primary btn-sm">
+                                        Edit Event
+                                    </a>
+
+                                    @* Open route and category management for this event. *@
+                                    <a asp-controller="Organiser"
+                                       asp-action="ManageEvent"
+                                       asp-route-id="@raceEvent.EventId"
+                                       class="btn btn-outline-success btn-sm">
+                                        Manage Routes & Categories
+                                    </a>
+
+                                    @* Submit a secure POST request to delete this event. *@
+                                    <form asp-controller="Organiser"
+                                          asp-action="DeleteEvent"
+                                          asp-route-id="@raceEvent.EventId"
+                                          method="post"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Are you sure you want to delete this event? This action cannot be undone.');">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            Delete Event
+                                        </button>
+                                    </form>
+
+                                </div>
                             </div>
                         </article>
                     </div>

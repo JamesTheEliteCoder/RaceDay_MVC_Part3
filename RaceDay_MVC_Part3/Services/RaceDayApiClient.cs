@@ -722,6 +722,24 @@ public class RaceDayApiClient
 
 
 
+
+    public async Task<bool> DeleteEventAsync(int eventId, ISession mvcSession)
+    {
+        using var client = CreateClient();
+
+        using var request = CreateAuthenticatedRequest(
+            HttpMethod.Delete,
+            $"api/events/{eventId}",
+            mvcSession);
+
+        using var response = await client.SendAsync(request);
+
+        return response.IsSuccessStatusCode;
+    }//end of DeleteEventAsync method
+
+
+
+
     // Retrieves an event banner image through the Part 2 API.
     public async Task<(byte[] ImageData, string ContentType)?> GetEventBannerAsync(
         int eventId,
