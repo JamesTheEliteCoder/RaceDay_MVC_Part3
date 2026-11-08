@@ -4,70 +4,70 @@
     ViewData["Title"] = "My Events";
 }
 
-<div class="container mt-4">
+<div class="container py-5">
 
-    <div class="mb-4">
-        <h2 class="fw-bold">My Events</h2>
-        <p class="text-muted">
-            Keep track of the races you've entered and your enrolment details.
+    @* Participant page heading. *@
+    <div class="dashboard-hero mb-5 p-4 p-md-5">
+        <span class="dashboard-eyebrow">
+            PARTICIPANT PORTAL
+        </span>
+
+        <h1 class="display-5 fw-bold mt-3 mb-2">
+            My Events
+        </h1>
+
+        <p class="lead mb-0">
+            Your race journey, all in one place.
+            Track your entries, check your enrolment details
+            and prepare for your next challenge.
         </p>
     </div>
 
     @if (Model == null || !Model.Any())
     {
-        <div class="alert alert-info">
-            <h5 class="alert-heading">No events yet!</h5>
-            <p class="mb-3">
-                You haven't enrolled in any events. Explore available races
-                and find your next challenge.
-            </p>
+        @* Display a helpful message when the participant has no enrolments. *@
+        <div class="card event-dashboard-card">
+            <div class="card-body text-center py-5">
 
-            <a asp-controller="Participant"
-               asp-action="BrowseEvents"
-               class="btn btn-primary">
-                Browse Events
-            </a>
+                <div class="display-4 mb-3">🏁</div>
+
+                <h2 class="h4 fw-bold mb-3">
+                    No events yet!
+                </h2>
+
+                <p class="text-muted mb-4">
+                    You haven't enrolled in any events.
+                    Explore available races and find your next challenge.
+                </p>
+
+                <a asp-controller="Participant"
+                   asp-action="BrowseEvents"
+                   class="btn btn-raceday">
+                    Browse Events
+                </a>
+
+            </div>
         </div>
     }
     else
     {
+        @* Display each participant enrolment as an event card. *@
         <div class="row g-4">
 
             @foreach (var enrolment in Model)
             {
-                <div class="col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-xl-4">
 
-                    <div class="card h-100 shadow-sm">
+                    <article class="card event-dashboard-card h-100">
 
-                        <div class="card-body">
+                        <div class="event-card-accent"></div>
 
-                            <h5 class="card-title fw-bold">
-                                @enrolment.EventName
-                            </h5>
+                        <div class="card-body p-4">
 
-                            <p class="text-muted mb-3">
-                                @enrolment.Venue, @enrolment.City
-                            </p>
-
-                            <hr />
-
-                            <p>
-                                <strong>Event Date:</strong>
-                                @enrolment.EventDate.ToString("dd MMMM yyyy")
-                            </p>
-
-                            <p>
-                                <strong>Category:</strong>
-                                @enrolment.CategoryName
-                            </p>
-
-                            <p>
-                                <strong>Enrolled On:</strong>
-                                @enrolment.EnrolmentDate.ToString("dd MMMM yyyy")
-                            </p>
-
-                            <p>
-                                <strong>Status:</strong>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="event-type-badge">
+                                    MY ENTRY
+                                </span>
 
                                 @if (enrolment.Status == "Confirmed")
                                 {
@@ -81,22 +81,70 @@
                                         @enrolment.Status
                                     </span>
                                 }
+                            </div>
+
+                            <h2 class="h4 card-title fw-bold mb-2">
+                                @enrolment.EventName
+                            </h2>
+
+                            <p class="text-muted mb-4">
+                                @enrolment.Venue, @enrolment.City
                             </p>
+
+                            <div class="event-details">
+
+                                <div class="event-detail-row">
+                                    <span class="event-detail-icon">📅</span>
+
+                                    <div>
+                                        <small>EVENT DATE</small>
+
+                                        <strong>
+                                            @enrolment.EventDate.ToString("dd MMMM yyyy")
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <div class="event-detail-row">
+                                    <span class="event-detail-icon">🏃</span>
+
+                                    <div>
+                                        <small>CATEGORY</small>
+
+                                        <strong>
+                                            @enrolment.CategoryName
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <div class="event-detail-row">
+                                    <span class="event-detail-icon">📝</span>
+
+                                    <div>
+                                        <small>ENROLLED ON</small>
+
+                                        <strong>
+                                            @enrolment.EnrolmentDate.ToString("dd MMMM yyyy")
+                                        </strong>
+                                    </div>
+                                </div>
+
+                            </div>
 
                         </div>
 
-                        <div class="card-footer bg-white border-0">
+                        <div class="event-card-actions p-3">
 
                             <a asp-controller="Participant"
                                asp-action="EventDetails"
                                asp-route-id="@enrolment.EventId"
-                               class="btn btn-outline-primary w-100">
+                               class="btn btn-raceday-outline w-100">
                                 View Event Details
                             </a>
 
                         </div>
 
-                    </div>
+                    </article>
 
                 </div>
             }
