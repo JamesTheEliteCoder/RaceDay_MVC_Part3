@@ -1,72 +1,133 @@
-﻿@model RaceDay_MVC_Part3.Models.EventEnrolmentsViewModel
+﻿
+@model RaceDay_MVC_Part3.Models.EventEnrolmentsViewModel
 
 @{
     ViewData["Title"] = "Event Enrolments";
 }
 
-<div class="container mt-4">
+<div class="container py-5">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <span class="badge bg-primary mb-2">Organiser</span>
-            <h1 class="display-6">Event Enrolments</h1>
-            <p class="text-muted mb-0">@Model.EventName</p>
-        </div>
+    <!-- Page heading -->
+    <div class="dashboard-hero p-4 p-md-5 mb-4">
 
-        <a asp-controller="Organiser"
-           asp-action="ManageEvent"
-           asp-route-id="@Model.EventId"
-           class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left me-1"></i>
-            Back to Event
-        </a>
+        <span class="dashboard-eyebrow">ORGANISER PORTAL</span>
+
+        <h1 class="display-5 fw-bold mt-2">Event Enrolments</h1>
+
+        <h4 class="mt-3">@Model.EventName</h4>
+
+        <p class="lead mb-0">
+            Review registered participants, their race categories and enrolment statuses.
+        </p>
+
     </div>
 
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
+    <!-- Participant overview -->
+    <div class="event-dashboard-card mb-4">
 
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="h4 mb-0">Registered Participants</h2>
+        <div class="event-card-accent"></div>
 
-                <span class="badge bg-info text-dark">
-                    @Model.Enrolments.Count Participants
-                </span>
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between
+                        align-items-center flex-wrap gap-3">
+
+                <div>
+                    <span class="dashboard-eyebrow">PARTICIPANT MANAGEMENT</span>
+                    <h3 class="fw-bold mt-2 mb-1">
+                        Registered Participants
+                    </h3>
+                    <p class="text-muted mb-0">
+                        Participants currently registered for this event.
+                    </p>
+                </div>
+
+                <div class="enrolment-count">
+                    <span class="enrolment-count-number">
+                        @Model.Enrolments.Count
+                    </span>
+                    <span class="enrolment-count-label">
+                        PARTICIPANTS
+                    </span>
+                </div>
+
             </div>
+
+        </div>
+
+    </div>
+
+    <!-- Participant list -->
+    <div class="event-dashboard-card">
+
+        <div class="event-card-accent"></div>
+
+        <div class="card-body p-4">
 
             @if (!Model.Enrolments.Any())
             {
-                <div class="alert alert-info mb-0">
-                    No participants have enrolled in this event yet.
+                <div class="text-center py-5">
+
+                    <i class="bi bi-people display-3 text-muted"></i>
+
+                    <h4 class="fw-bold mt-3">No Participants Yet</h4>
+
+                    <p class="text-muted mb-0">
+                        No participants have enrolled in this event yet.
+                        Their registrations will appear here.
+                    </p>
+
                 </div>
             }
             else
             {
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
+
+                    <table class="table table-hover align-middle enrolment-table">
+
+                        <thead>
                             <tr>
-                                <th>Participant</th>
-                                <th>Email Address</th>
-                                <th>Category</th>
-                                <th>Enrolment Date</th>
-                                <th>Status</th>
+                                <th>PARTICIPANT</th>
+                                <th>EMAIL ADDRESS</th>
+                                <th>CATEGORY</th>
+                                <th>ENROLMENT DATE</th>
+                                <th>STATUS</th>
                             </tr>
                         </thead>
 
                         <tbody>
+
                             @foreach (var enrolment in Model.Enrolments)
                             {
                                 <tr>
+
                                     <td>
-                                        <strong>@enrolment.ParticipantName</strong>
-                                        <div class="small text-muted">
-                                            ID: @enrolment.ParticipantId
+                                        <div class="participant-identity">
+                                            <div class="participant-avatar">
+                                                <i class="bi bi-person-fill"></i>
+                                            </div>
+
+                                            <div>
+                                                <strong>
+                                                    @enrolment.ParticipantName
+                                                </strong>
+
+                                                <small>
+                                                    ID: @enrolment.ParticipantId
+                                                </small>
+                                            </div>
                                         </div>
                                     </td>
 
-                                    <td>@enrolment.ParticipantEmail</td>
+                                    <td>
+                                        @enrolment.ParticipantEmail
+                                    </td>
 
-                                    <td>@enrolment.CategoryName</td>
+                                    <td>
+                                        <span class="category-label">
+                                            @enrolment.CategoryName
+                                        </span>
+                                    </td>
 
                                     <td>
                                         @enrolment.EnrolmentDate.ToString("dd MMM yyyy")
@@ -75,24 +136,46 @@
                                     <td>
                                         @if (enrolment.Status == "Confirmed")
                                         {
-                                            <span class="badge bg-success">
+                                            <span class="enrolment-status confirmed">
+                                                <i class="bi bi-check-circle-fill me-1"></i>
                                                 @enrolment.Status
                                             </span>
                                         }
                                         else
                                         {
-                                            <span class="badge bg-secondary">
+                                            <span class="enrolment-status other-status">
                                                 @enrolment.Status
                                             </span>
                                         }
                                     </td>
+
                                 </tr>
                             }
+
                         </tbody>
+
                     </table>
+
                 </div>
             }
 
         </div>
+
     </div>
+
+    <!-- Navigation -->
+    <div class="mt-4">
+
+        <a asp-controller="Organiser"
+           asp-action="ManageEvent"
+           asp-route-id="@Model.EventId"
+           class="btn btn-raceday-outline">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Event
+
+        </a>
+
+    </div>
+
 </div>

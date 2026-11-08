@@ -542,3 +542,120 @@ a {
         object-fit: cover;
     }
 
+
+/* Organiser enrolment management */
+
+.enrolment-count {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 125px;
+    padding: 1rem 1.5rem;
+    background: var(--raceday-surface-raised);
+    border: 1px solid var(--raceday-border);
+    border-radius: 12px;
+}
+
+.enrolment-count-number {
+    color: var(--raceday-orange);
+    font-size: 2.5rem;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.enrolment-count-label {
+    color: var(--raceday-muted);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.enrolment-table {
+    color: var(--raceday-text);
+    margin-bottom: 0;
+}
+
+    .enrolment-table thead th {
+        color: var(--raceday-orange);
+        background: var(--raceday-surface-raised);
+        border-bottom: 1px solid var(--raceday-border);
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        padding: 1rem;
+        white-space: nowrap;
+    }
+
+    .enrolment-table tbody td {
+        color: var(--raceday-text);
+        border-color: var(--raceday-border);
+        padding: 1rem;
+    }
+
+    .enrolment-table tbody tr:hover {
+        background: rgba(255, 122, 26, 0.05);
+    }
+
+.participant-identity {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    min-width: 160px;
+}
+
+.participant-avatar {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--raceday-surface-raised);
+    border: 1px solid var(--raceday-border);
+    border-radius: 50%;
+    color: var(--raceday-orange);
+    font-size: 1.2rem;
+}
+
+.participant-identity div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.participant-identity strong {
+    color: var(--raceday-text);
+}
+
+.participant-identity small {
+    color: var(--raceday-muted);
+    font-size: 0.75rem;
+}
+
+.category-label {
+    color: var(--raceday-orange);
+    font-weight: 700;
+}
+
+.enrolment-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+    .enrolment-status.confirmed {
+        color: #36C98F;
+        background: rgba(54, 201, 143, 0.12);
+    }
+
+    .enrolment-status.other-status {
+        color: var(--raceday-muted);
+        background: var(--raceday-surface-raised);
+    }
+
+
