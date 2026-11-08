@@ -5,110 +5,196 @@
     ViewData["Title"] = "Edit Event";
 }
 
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4 p-md-5">
-                    <h1 class="h3 mb-2">Edit Event</h1>
-                    <p class="text-muted mb-4">
-                        Update your event details below.
-                    </p>
+<div class="container py-5">
 
-                    <form asp-action="EditEvent" method="post">
-                        @Html.AntiForgeryToken()
+    <!-- Page heading -->
+    <div class="dashboard-hero p-4 p-md-5 mb-4">
+        <span class="dashboard-eyebrow">ORGANISER PORTAL</span>
 
-                        @* Keep the event ID attached to the submitted form. *@
-                        <input asp-for="EventId" type="hidden" />
+        <h1 class="display-5 fw-bold mt-2">Edit Event</h1>
 
-                        <div asp-validation-summary="ModelOnly"
-                             class="text-danger mb-3"></div>
+        <p class="lead mb-0">
+            Update your event information and keep your race details accurate.
+        </p>
+    </div>
 
-                        <div class="mb-3">
-                            <label asp-for="Name" class="form-label"></label>
-                            <input asp-for="Name" class="form-control" />
-                            <span asp-validation-for="Name"
-                                  class="text-danger"></span>
-                        </div>
+    <!-- Event editing form -->
+    <div class="event-dashboard-card">
 
-                        <div class="mb-3">
-                            <label asp-for="Description" class="form-label"></label>
-                            <textarea asp-for="Description"
-                                      class="form-control"
-                                      rows="4"></textarea>
-                            <span asp-validation-for="Description"
-                                  class="text-danger"></span>
-                        </div>
+        <div class="event-card-accent"></div>
 
-                        <div class="mb-3">
-                            <label asp-for="EventDate" class="form-label"></label>
-                            <input asp-for="EventDate" type="date"
-                                   class="form-control" />
-                            <span asp-validation-for="EventDate"
-                                  class="text-danger"></span>
-                        </div>
+        <div class="card-body p-4 p-md-5">
 
-                        <div class="mb-3">
-                            <label asp-for="Venue" class="form-label"></label>
-                            <input asp-for="Venue" class="form-control" />
-                            <span asp-validation-for="Venue"
-                                  class="text-danger"></span>
-                        </div>
+            <div class="mb-4">
+                <span class="event-type-badge">EVENT MANAGEMENT</span>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="City" class="form-label"></label>
-                                <input asp-for="City" class="form-control" />
-                                <span asp-validation-for="City"
-                                      class="text-danger"></span>
-                            </div>
+                <h4 class="fw-bold mt-3">Event Information</h4>
 
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Province" class="form-label"></label>
-                                <input asp-for="Province" class="form-control" />
-                                <span asp-validation-for="Province"
-                                      class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="DistanceKm" class="form-label"></label>
-                                <input asp-for="DistanceKm" type="number"
-                                       step="0.01" min="0.01"
-                                       class="form-control" />
-                                <span asp-validation-for="DistanceKm"
-                                      class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="EventType" class="form-label"></label>
-                                <select asp-for="EventType" class="form-select">
-                                    <option value="">Select event type</option>
-                                    <option value="Run">Run</option>
-                                    <option value="Walk">Walk</option>
-                                    <option value="Cycle">Cycle</option>
-                                </select>
-                                <span asp-validation-for="EventType"
-                                      class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="d-flex flex-wrap gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary">
-                                Save Changes
-                            </button>
-
-                            <a asp-action="Dashboard"
-                               class="btn btn-outline-secondary">
-                                Cancel
-                            </a>
-                        </div>
-                    </form>
-                </div>
+                <p class="text-muted">
+                    Make changes to the details of your sporting event below.
+                </p>
             </div>
+
+            <form asp-action="EditEvent" method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input asp-for="EventId" type="hidden" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger mb-4"></div>
+
+                <!-- Event name -->
+                <div class="mb-4">
+                    <label asp-for="Name"
+                           class="form-label fw-semibold"></label>
+
+                    <input asp-for="Name"
+                           class="form-control"
+                           placeholder="Enter event name" />
+
+                    <span asp-validation-for="Name"
+                          class="text-danger"></span>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-4">
+                    <label asp-for="Description"
+                           class="form-label fw-semibold"></label>
+
+                    <textarea asp-for="Description"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Describe your event..."></textarea>
+
+                    <span asp-validation-for="Description"
+                          class="text-danger"></span>
+                </div>
+
+                <div class="profile-section-divider mb-4">
+                    <span>EVENT SCHEDULE & LOCATION</span>
+                </div>
+
+                <!-- Date and venue -->
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label asp-for="EventDate"
+                               class="form-label fw-semibold"></label>
+
+                        <input asp-for="EventDate"
+                               type="date"
+                               class="form-control" />
+
+                        <span asp-validation-for="EventDate"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Venue"
+                               class="form-label fw-semibold"></label>
+
+                        <input asp-for="Venue"
+                               class="form-control"
+                               placeholder="Enter venue name" />
+
+                        <span asp-validation-for="Venue"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="City"
+                               class="form-label fw-semibold"></label>
+
+                        <input asp-for="City"
+                               class="form-control"
+                               placeholder="Enter city" />
+
+                        <span asp-validation-for="City"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Province"
+                               class="form-label fw-semibold"></label>
+
+                        <input asp-for="Province"
+                               class="form-control"
+                               placeholder="Enter province" />
+
+                        <span asp-validation-for="Province"
+                              class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <div class="profile-section-divider my-4">
+                    <span>RACE CONFIGURATION</span>
+                </div>
+
+                <!-- Distance and event type -->
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label asp-for="DistanceKm"
+                               class="form-label fw-semibold"></label>
+
+                        <div class="input-group">
+                            <input asp-for="DistanceKm"
+                                   type="number"
+                                   step="0.01"
+                                   min="0.01"
+                                   class="form-control"
+                                   placeholder="e.g. 10" />
+
+                            <span class="input-group-text">KM</span>
+                        </div>
+
+                        <span asp-validation-for="DistanceKm"
+                              class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="EventType"
+                               class="form-label fw-semibold"></label>
+
+                        <select asp-for="EventType"
+                                class="form-select">
+
+                            <option value="">Select event type</option>
+                            <option value="Run">Run</option>
+                            <option value="Walk">Walk</option>
+                            <option value="Cycle">Cycle</option>
+
+                        </select>
+
+                        <span asp-validation-for="EventType"
+                              class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <!-- Form actions -->
+                <div class="d-flex flex-wrap gap-3 mt-5">
+
+                    <button type="submit" class="btn btn-raceday">
+                        <i class="bi bi-save me-1"></i>
+                        Save Changes
+                    </button>
+
+                    <a asp-action="Dashboard"
+                       class="btn btn-raceday-outline">
+                        <i class="bi bi-arrow-left me-1"></i>
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
         </div>
     </div>
+
 </div>
 
 @section Scripts {

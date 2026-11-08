@@ -496,3 +496,32 @@ a {
     font-size: 0.85rem;
     text-transform: uppercase;
 }
+
+
+
+/* Organiser event form sections */
+
+.profile-section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--raceday-orange);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+    .profile-section-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--raceday-border);
+    }
+
+.input-group-text {
+    background: var(--raceday-surface-raised);
+    color: var(--raceday-orange);
+    border-color: var(--raceday-border);
+    font-weight: 800;
+}
+
