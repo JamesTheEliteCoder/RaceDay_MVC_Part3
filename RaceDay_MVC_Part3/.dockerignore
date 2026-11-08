@@ -1,0 +1,18 @@
+# Ignore compiled output
+bin/
+obj/
+
+# Ignore Visual Studio files
+.vs/
+.vscode/
+
+# Ignore Git files
+.git/
+.gitignore
+
+# Ignore local environment files
+.env
+.env.*
+
+# Ignore Docker-related files
+docker-compose*

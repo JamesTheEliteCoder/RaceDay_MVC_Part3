@@ -3,7 +3,6 @@ using RaceDay_MVC_Part3.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient();
 
-builder.Services.AddHttpClient();
 
 // Registers the API client so that controllers can communicate with the Part 2 API.
 builder.Services.AddScoped<RaceDayApiClient>();

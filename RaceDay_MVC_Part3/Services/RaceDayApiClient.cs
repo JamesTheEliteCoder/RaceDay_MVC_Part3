@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using RaceDay_MVC_Part3.Models;
 using System.Linq;
@@ -40,7 +39,6 @@ public class RaceDayApiClient
 
         return client;
     }// end of CreateClient method
-
 
     public async Task<ApiUserResponse?> LoginAsync(
         LoginRequest request,
