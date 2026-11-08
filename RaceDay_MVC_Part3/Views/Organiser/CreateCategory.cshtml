@@ -1,58 +1,103 @@
-﻿@model RaceDay_MVC_Part3.Models.CreateCategoryViewModel
+﻿
+@model RaceDay_MVC_Part3.Models.CreateCategoryViewModel
 
 @{
     ViewData["Title"] = "Add Category";
 }
 
-<div class="container mt-4">
+<div class="container py-5">
 
-    <div class="mb-4">
-        <h1>Add Event Category</h1>
-        <p class="text-muted">
-            Create a participant category and associate it with an event route.
+    <!-- Page heading -->
+    <div class="dashboard-hero p-4 p-md-5 mb-4">
+
+        <span class="dashboard-eyebrow">ORGANISER PORTAL</span>
+
+        <h1 class="display-5 fw-bold mt-2">Add Event Category</h1>
+
+        <p class="lead mb-0">
+            Configure participant divisions and assign them to an event route.
         </p>
+
     </div>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
+    <!-- Category form -->
+    <div class="event-dashboard-card">
+
+        <div class="event-card-accent"></div>
+
+        <div class="card-body p-4 p-md-5">
 
             <form asp-action="CreateCategory" method="post">
 
-                @* Preserve the event ID when the form is submitted. *@
+                <!-- Preserve event ID -->
                 <input type="hidden" asp-for="EventId" />
 
-                @* Display validation and API errors. *@
+                <!-- Validation -->
                 <div asp-validation-summary="ModelOnly"
-                     class="text-danger mb-3"></div>
+                     class="text-danger mb-4"></div>
 
-                <div class="mb-3">
-                    <label asp-for="Name" class="form-label">
-                        Category Name
-                    </label>
-                    <input asp-for="Name" class="form-control"
-                           placeholder="e.g. Men's 5K" />
-                    <span asp-validation-for="Name"
-                          class="text-danger"></span>
+                <!-- Category identity -->
+                <div class="profile-section-divider mb-4">
+                    <i class="bi bi-tags-fill"></i>
+                    CATEGORY IDENTITY
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="CategoryType" class="form-label">
-                        Category Type
-                    </label>
-                    <select asp-for="CategoryType" class="form-select">
-                        <option value="">-- Select Category Type --</option>
-                        <option value="Age">Age</option>
-                        <option value="Distance">Distance</option>
-                    </select>
-                    <span asp-validation-for="CategoryType"
-                          class="text-danger"></span>
+                <div class="row g-4 mb-4">
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Name" class="form-label fw-semibold">
+                            Category Name
+                        </label>
+
+                        <input asp-for="Name"
+                               class="form-control"
+                               placeholder="e.g. Men's 5K" />
+
+                        <span asp-validation-for="Name"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="CategoryType"
+                               class="form-label fw-semibold">
+                            Category Type
+                        </label>
+
+                        <select asp-for="CategoryType"
+                                class="form-select">
+
+                            <option value="">-- Select Category Type --</option>
+                            <option value="Age">Age</option>
+                            <option value="Distance">Distance</option>
+
+                        </select>
+
+                        <span asp-validation-for="CategoryType"
+                              class="text-danger"></span>
+
+                    </div>
+
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="RouteId" class="form-label">
+                <!-- Route assignment -->
+                <div class="profile-section-divider mb-4">
+                    <i class="bi bi-signpost-2-fill"></i>
+                    ROUTE ASSIGNMENT
+                </div>
+
+                <div class="mb-4">
+
+                    <label asp-for="RouteId"
+                           class="form-label fw-semibold">
                         Associated Route
                     </label>
-                    <select asp-for="RouteId" class="form-select">
+
+                    <select asp-for="RouteId"
+                            class="form-select">
+
                         <option value="">-- Select a Route --</option>
 
                         @foreach (var route in Model.AvailableRoutes)
@@ -61,54 +106,108 @@
                                 @route.RouteName (@route.DistanceKm km)
                             </option>
                         }
+
                     </select>
+
                     <span asp-validation-for="RouteId"
                           class="text-danger"></span>
+
+                    <small class="text-muted d-block mt-2">
+                        Choose the course participants in this category will follow.
+                    </small>
+
                 </div>
 
-                <hr />
+                <!-- Age restrictions -->
+                <div class="profile-section-divider mb-4">
+                    <i class="bi bi-person-badge-fill"></i>
+                    AGE RESTRICTIONS
+                </div>
 
-                <h5>Age Restrictions</h5>
-                <p class="text-muted">
+                <p class="text-muted mb-4">
                     These fields apply to Age categories only.
                     Leave them blank if no age restriction is required.
                 </p>
 
-                <div class="mb-3">
-                    <label asp-for="MinimumAge" class="form-label">
-                        Minimum Age (optional)
-                    </label>
-                    <input asp-for="MinimumAge" class="form-control"
-                           type="number" min="0" />
-                    <span asp-validation-for="MinimumAge"
-                          class="text-danger"></span>
+                <div class="row g-4 mb-4">
+
+                    <div class="col-md-6">
+
+                        <label asp-for="MinimumAge"
+                               class="form-label fw-semibold">
+                            Minimum Age
+                            <span class="text-muted fw-normal">(Optional)</span>
+                        </label>
+
+                        <div class="input-group">
+
+                            <input asp-for="MinimumAge"
+                                   class="form-control"
+                                   type="number"
+                                   min="0"
+                                   placeholder="e.g. 18" />
+
+                            <span class="input-group-text">Years</span>
+
+                        </div>
+
+                        <span asp-validation-for="MinimumAge"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="MaximumAge"
+                               class="form-label fw-semibold">
+                            Maximum Age
+                            <span class="text-muted fw-normal">(Optional)</span>
+                        </label>
+
+                        <div class="input-group">
+
+                            <input asp-for="MaximumAge"
+                                   class="form-control"
+                                   type="number"
+                                   min="0"
+                                   placeholder="e.g. 35" />
+
+                            <span class="input-group-text">Years</span>
+
+                        </div>
+
+                        <span asp-validation-for="MaximumAge"
+                              class="text-danger"></span>
+
+                    </div>
+
                 </div>
 
-                <div class="mb-3">
-                    <label asp-for="MaximumAge" class="form-label">
-                        Maximum Age (optional)
-                    </label>
-                    <input asp-for="MaximumAge" class="form-control"
-                           type="number" min="0" />
-                    <span asp-validation-for="MaximumAge"
-                          class="text-danger"></span>
-                </div>
+                <!-- Form actions -->
+                <div class="d-flex flex-wrap gap-3 mt-5">
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-raceday">
+
+                        <i class="bi bi-plus-circle me-1"></i>
                         Add Category
+
                     </button>
 
                     <a asp-action="ManageEvent"
                        asp-route-id="@Model.EventId"
-                       class="btn btn-outline-secondary">
+                       class="btn btn-raceday-outline">
+
+                        <i class="bi bi-arrow-left me-1"></i>
                         Cancel
+
                     </a>
+
                 </div>
 
             </form>
 
         </div>
+
     </div>
 
 </div>
