@@ -1,10 +1,12 @@
-﻿using RaceDay_MVC_Part3.Models;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http;
-using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
-using System.Net.Http;
+using RaceDay_MVC_Part3.Models;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 
 
@@ -342,6 +344,58 @@ public class RaceDayApiClient
     }//end of UpdateMyProfileAsync method
 
 
+
+
+
+    public async Task UploadProfilePictureAsync(
+    IFormFile file,
+    ISession mvcSession)
+    {
+        using var content = new MultipartFormDataContent();
+
+        using var fileContent = new StreamContent(file.OpenReadStream());
+
+        fileContent.Headers.ContentType =
+            new MediaTypeHeaderValue(file.ContentType);
+
+        content.Add(fileContent, "file", file.FileName);
+
+        using var response = await SendAuthenticatedAsync(
+            HttpMethod.Post,
+            "api/users/me/profile-picture",
+            mvcSession,
+            content);
+
+        response.EnsureSuccessStatusCode();
+    }// end of UploadProfilePictureAsync method     
+
+
+
+
+
+
+
+
+    public async Task<(byte[] ImageData, string ContentType)?> GetMyProfilePictureAsync(
+    ISession mvcSession)
+    {
+        using var response = await SendAuthenticatedAsync(
+            HttpMethod.Get,
+            "api/users/me/profile-picture",
+            mvcSession);
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+            return null;
+
+        response.EnsureSuccessStatusCode();
+
+        var imageData = await response.Content.ReadAsByteArrayAsync();
+
+        var contentType = response.Content.Headers.ContentType?.MediaType
+                          ?? "application/octet-stream";
+
+        return (imageData, contentType);
+    }// end of GetMyProfilePictureAsync method
 
 
 

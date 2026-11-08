@@ -36,5 +36,43 @@ public class ImagesController : Controller
 
         // Send the image bytes to the browser.
         return File(image.Value.ImageData, image.Value.ContentType);
-    }
-}
+    }// end of EventBanner method
+
+
+
+
+    // Retrieves the signed-in user's profile picture.
+    [HttpGet]
+    public async Task<IActionResult> ProfilePicture()
+    {
+        // Ensure that the visitor has an active MVC session.
+        if (HttpContext.Session.GetInt32("UserId") is null)
+        {
+            return Unauthorized();
+        }
+
+        // Retrieve the profile picture through the Part 2 API.
+        var image = await _apiClient.GetMyProfilePictureAsync(
+            HttpContext.Session);
+
+        // Return 404 if the user has no profile picture.
+        if (image is null)
+        {
+            return NotFound();
+        }
+
+        // Send the image bytes to the browser.
+        return File(image.Value.ImageData, image.Value.ContentType);
+    }// end of ProfilePicture method
+
+
+
+
+
+
+
+
+
+
+
+}//end of ImagesController class

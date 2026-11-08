@@ -156,4 +156,58 @@ public class ProfileController : Controller
     }// end of Edit (POST) method
 
 
+
+
+
+
+
+
+    // Processes a participant's profile-picture upload.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UploadProfilePicture(
+        UploadProfilePictureViewModel model)
+    {
+        var userId = HttpContext.Session.GetInt32("UserId");
+
+        if (userId is null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
+        var role = HttpContext.Session.GetString("Role");
+
+        if (!string.Equals(role, "Participant", StringComparison.Ordinal))
+        {
+            return StatusCode(StatusCodes.Status403Forbidden);
+        }
+
+        if (!ModelState.IsValid)
+        {
+            TempData["ErrorMessage"] = "Please select a profile picture.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        try
+        {
+            await _apiClient.UploadProfilePictureAsync(
+                model.ProfilePicture!,
+                HttpContext.Session);
+
+            TempData["SuccessMessage"] =
+                "Your profile picture was uploaded successfully.";
+
+            return RedirectToAction(nameof(Index));
+        }
+        catch (HttpRequestException ex)
+        {
+            Console.WriteLine($"Error uploading profile picture: {ex.Message}");
+
+            TempData["ErrorMessage"] =
+                "Unable to upload your profile picture. Please try again.";
+
+            return RedirectToAction(nameof(Index));
+        }
+    }// end of UploadProfilePicture method
+
 }// end of ProfileController class
